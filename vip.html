@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VIP Plans (Weekly & Monthly) - Daily Math Earn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-10 shadow-lg">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="bg-slate-700 hover:bg-slate-600 text-white p-2.5 rounded-xl transition flex items-center justify-center" title="Back to Tasks">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </a>
+        <div>
+          <h1 class="font-bold text-lg leading-tight text-white">VIP Plans (Weekly &amp; Monthly)</h1>
+          <p id="current-vip-label" class="text-xs text-amber-400 font-semibold">Active: Free Plan (3 Days Only)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-full">
+        <i class="fa-solid fa-coins text-amber-400"></i>
+        <span id="wallet-balance" class="font-bold text-amber-400 text-sm">Rs. 0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-md mx-auto w-full p-4 flex-1 space-y-4">
+
+    <!-- Active Plan Status Banner -->
+    <div id="active-plan-banner" class="bg-slate-800/80 border border-slate-700 rounded-2xl px-4 py-3 flex items-center justify-between text-xs">
+      <span class="text-slate-400">Active: <strong id="active-cycle-text" class="text-white uppercase">Free (3 Days Max)</strong></span>
+      <span id="active-expiry-text" class="text-emerald-400 font-semibold">Day 1 / 3</span>
+    </div>
+
+    <!-- VIP Plans Container -->
+    <div id="vip-plans-list" class="space-y-4">
+      <!-- Populated by JS -->
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="p-4 text-center text-xs text-slate-500 border-t border-slate-800 space-y-2">
+    <div>
+      <a href="index.html" class="text-indigo-400 hover:text-indigo-300 font-semibold underline">Go to Daily Tasks</a>
+    </div>
+    <div>Daily Math Earn &bull; Free (3 Days) &bull; Weekly &amp; Monthly VIP</div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 text-white border border-slate-600 px-4 py-2.5 rounded-full shadow-2xl text-xs font-bold hidden z-50 transition-all">
+    Updated!
+  </div>
+
+  <script>
+    const FREE_MAX_DAYS = 3;
+
+    // Balanced Cash-Flow Model (Weekly 7 Days & Monthly 30 Days)
+    const VIP_TIERS = [
+      {
+        level: 0,
+        name: "Free Plan",
+        badge: "3 DAYS ONLY",
+        durationDays: FREE_MAX_DAYS,
+        weeklyCost: 0,
+        monthlyCost: 0,
+        taskCost: 0,
+        taskBonus: 10,
+        dailyTasks: 3,
+        dailyCap: 30
+      },
+      {
+        level: 1,
+        name: "VIP 1",
+        badge: "BRONZE",
+        weeklyCost: 300,
+        monthlyCost: 1050,
+        taskCost: 100,
+        taskBonus: 110,
+        dailyTasks: 3,
+        dailyCap: 30
+      },
+      {
+        level: 2,
+        name: "VIP 2",
+        badge: "SILVER",
+        weeklyCost: 600,
+        monthlyCost: 2100,
+        taskCost: 200,
+        taskBonus: 218,
+        dailyTasks: 3,
+        dailyCap: 54
+      },
+      {
+        level: 3,
+        name: "VIP 3",
+        badge: "GOLD",
+        weeklyCost: 1200,
+        monthlyCost: 4200,
+        taskCost: 400,
+        taskBonus: 432,
+        dailyTasks: 3,
+        dailyCap: 96
+      },
+      {
+        level: 4,
+        name: "VIP 4",
+        badge: "PLATINUM",
+        weeklyCost: 2000,
+        monthlyCost: 7000,
+        taskCost: 650,
+        taskBonus: 698,
+        dailyTasks: 3,
+        dailyCap: 144
+      },
+      {
+        level: 5,
+        name: "VIP 5",
+        badge: "DIAMOND",
+        weeklyCost: 3500,
+        monthlyCost: 12200,
+        taskCost: 1000,
+        taskBonus: 1070,
+        dailyTasks: 3,
+        dailyCap: 210
+      },
+      {
+        level: 6,
+        name: "VIP 6",
+        badge: "ROYAL",
+        weeklyCost: 6000,
+        monthlyCost: 21000,
+        taskCost: 1500,
+        taskBonus: 1600,
+        dailyTasks: 4,
+        dailyCap: 400
+      },
+      {
+        level: 7,
+        name: "VIP 7",
+        badge: "ELITE",
+        weeklyCost: 10000,
+        monthlyCost: 35000,
+        taskCost: 2500,
+        taskBonus: 2650,
+        dailyTasks: 4,
+        dailyCap: 600
+      },
+      {
+        level: 8,
+        name: "VIP 8",
+        badge: "MASTER",
+        weeklyCost: 16000,
+        monthlyCost: 56000,
+        taskCost: 4000,
+        taskBonus: 4220,
+        dailyTasks: 4,
+        dailyCap: 880
+      },
+      {
+        level: 9,
+        name: "VIP 9",
+        badge: "LEGEND",
+        weeklyCost: 25000,
+        monthlyCost: 87500,
+        taskCost: 6000,
+        taskBonus: 6300,
+        dailyTasks: 5,
+        dailyCap: 1500
+      }
+    ];
+
+    let walletBalance = 0;
+    let currentVipLevel = 0;
+    let activeCycle = "free_3d";
+    let activeExpiry = null;
+    let freeDay = 1;
+    let isFreeExpired = false;
+
+    function addDaysToToday(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split("T")[0];
+    }
+
+    function ensureFreePlanState() {
+      let freeStart = localStorage.getItem("math_free_start_date");
+      let freeExp = localStorage.getItem("math_free_expiry");
+      const today = new Date().toISOString().split("T")[0];
+
+      if (!freeStart || !freeExp) {
+        freeStart = today;
+        freeExp = addDaysToToday(FREE_MAX_DAYS);
+        localStorage.setItem("math_free_start_date", freeStart);
+        localStorage.setItem("math_free_expiry", freeExp);
+      }
+
+      const startMs = new Date(freeStart + "T00:00:00").getTime();
+      const todayMs = new Date(today + "T00:00:00").getTime();
+      const diffDays = Math.floor((todayMs - startMs) / (1000 * 60 * 60 * 24)) + 1;
+
+      if (today > freeExp || diffDays > FREE_MAX_DAYS) {
+        freeDay = FREE_MAX_DAYS;
+        isFreeExpired = true;
+      } else {
+        freeDay = Math.max(1, diffDays);
+        isFreeExpired = false;
+      }
+
+      localStorage.setItem("math_free_plan_day", freeDay.toString());
+      return freeExp;
+    }
+
+    function loadState() {
+      walletBalance = parseInt(localStorage.getItem("math_wallet_balance") || "0", 10);
+      currentVipLevel = parseInt(localStorage.getItem("math_vip_level") || "0", 10);
+      activeCycle = localStorage.getItem("math_vip_cycle") || (currentVipLevel === 0 ? "free_3d" : "weekly");
+      activeExpiry = localStorage.getItem("math_vip_expiry") || null;
+
+      const freeExp = ensureFreePlanState();
+      if (currentVipLevel === 0) {
+        activeCycle = "free_3d";
+        activeExpiry = freeExp;
+      }
+
+      localStorage.setItem("math_vip_tiers_config", JSON.stringify(VIP_TIERS));
+      syncActiveRule();
+      updateHeader();
+      renderPlans();
+    }
+
+    function syncActiveRule() {
+      const tier = VIP_TIERS.find(t => t.level === currentVipLevel) || VIP_TIERS[0];
+      const expiredFlag = currentVipLevel === 0 ? isFreeExpired : false;
+      localStorage.setItem("math_active_vip_rule", JSON.stringify({
+        ...tier,
+        cycle: activeCycle,
+        expiry: activeExpiry,
+        freeDay: freeDay,
+        freeMaxDays: FREE_MAX_DAYS,
+        isExpired: expiredFlag
+      }));
+    }
+
+    function updateHeader() {
+      const activeTier = VIP_TIERS.find(t => t.level === currentVipLevel) || VIP_TIERS[0];
+      document.getElementById("wallet-balance").textContent = `Rs. ${walletBalance.toLocaleString()}`;
+
+      const statusEl = document.getElementById("active-expiry-text");
+
+      if (currentVipLevel === 0) {
+        document.getElementById("current-vip-label").textContent =
+          isFreeExpired ? "Free Plan (3 Days Expired)" : `Active: Free Plan (Day ${freeDay}/${FREE_MAX_DAYS})`;
+        document.getElementById("active-cycle-text").textContent = "FREE (3 DAYS ONLY)";
+
+        if (isFreeExpired) {
+          statusEl.textContent = "Expired (Upgrade to VIP)";
+          statusEl.className = "text-rose-400 font-bold";
+        } else {
+          statusEl.textContent = `Day ${freeDay} of ${FREE_MAX_DAYS} • Till ${activeExpiry}`;
+          statusEl.className = "text-emerald-400 font-semibold";
+        }
+      } else {
+        document.getElementById("current-vip-label").textContent =
+          `Active: ${activeTier.name} (${activeCycle.toUpperCase()})`;
+        document.getElementById("active-cycle-text").textContent =
+          `${activeTier.name} • ${activeCycle === "monthly" ? "Monthly (30 Days)" : "Weekly (7 Days)"}`;
+        statusEl.textContent = activeExpiry ? `Valid till ${activeExpiry}` : "Active";
+        statusEl.className = "text-emerald-400 font-semibold";
+      }
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.className = `fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-full shadow-2xl text-xs font-bold z-50 border ${
+        isError
+          ? "bg-rose-950 text-rose-200 border-rose-500/50"
+          : "bg-emerald-950 text-emerald-200 border-emerald-500/50"
+      }`;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 2400);
+    }
+
+    function activatePlan(level, cycle) {
+      const tier = VIP_TIERS.find(t => t.level === level);
+      if (!tier) return;
+
+      if (level === 0) {
+        const freeExp = ensureFreePlanState();
+        currentVipLevel = 0;
+        activeCycle = "free_3d";
+        activeExpiry = freeExp;
+        localStorage.setItem("math_vip_level", "0");
+        localStorage.setItem("math_vip_cycle", "free_3d");
+        localStorage.setItem("math_vip_expiry", freeExp);
+        syncActiveRule();
+        updateHeader();
+        renderPlans();
+        if (isFreeExpired) {
+          showToast("Free Plan is limited to 3 days only. Please upgrade to VIP 1–9.", true);
+        } else {
+          showToast(`Free Plan active (3 days limit, Day ${freeDay}/${FREE_MAX_DAYS}).`);
+        }
+        return;
+      }
+
+      const chosenCycle = cycle === "monthly" ? "monthly" : "weekly";
+      const planCost = chosenCycle === "monthly" ? tier.monthlyCost : tier.weeklyCost;
+      const daysToAdd = chosenCycle === "monthly" ? 30 : 7;
+
+      if (level === currentVipLevel && activeCycle === chosenCycle) {
+        showToast(`${tier.name} (${chosenCycle.toUpperCase()}) is already active.`);
+        return;
+      }
+
+      if (planCost > 0) {
+        if (walletBalance < planCost) {
+          showToast(`Need Rs. ${planCost.toLocaleString()} in wallet for ${tier.name} (${chosenCycle}).`, true);
+          return;
+        }
+        walletBalance -= planCost;
+        localStorage.setItem("math_wallet_balance", walletBalance.toString());
+      }
+
+      currentVipLevel = tier.level;
+      activeCycle = chosenCycle;
+      activeExpiry = addDaysToToday(daysToAdd);
+
+      localStorage.setItem("math_vip_level", currentVipLevel.toString());
+      localStorage.setItem("math_vip_cycle", activeCycle);
+      localStorage.setItem("math_vip_expiry", activeExpiry);
+
+      syncActiveRule();
+      updateHeader();
+      renderPlans();
+      showToast(`Activated ${tier.name} ${chosenCycle.toUpperCase()} (${daysToAdd} days)!`);
+    }
+
+    function previewPlan(level, cycle) {
+      const tier = VIP_TIERS.find(t => t.level === level);
+      if (!tier || level === 0) return;
+
+      const chosenCycle = cycle === "monthly" ? "monthly" : "weekly";
+      const daysToAdd = chosenCycle === "monthly" ? 30 : 7;
+
+      currentVipLevel = tier.level;
+      activeCycle = chosenCycle;
+      activeExpiry = addDaysToToday(daysToAdd);
+
+      localStorage.setItem("math_vip_level", currentVipLevel.toString());
+      localStorage.setItem("math_vip_cycle", activeCycle);
+      localStorage.setItem("math_vip_expiry", activeExpiry);
+
+      syncActiveRule();
+      updateHeader();
+      renderPlans();
+      showToast(`Preview: ${tier.name} ${chosenCycle.toUpperCase()} active.`);
+    }
+
+    function renderPlans() {
+      const container = document.getElementById("vip-plans-list");
+      container.innerHTML = "";
+
+      VIP_TIERS.forEach(tier => {
+        const isFree = tier.level === 0;
+        const isWeeklyActive = !isFree && tier.level === currentVipLevel && activeCycle === "weekly";
+        const isMonthlyActive = !isFree && tier.level === currentVipLevel && activeCycle === "monthly";
+        const isAnyActive = isFree ? (currentVipLevel === 0) : (isWeeklyActive || isMonthlyActive);
+
+        const weeklyNet = tier.dailyCap * 7;
+        const monthlyNet = tier.dailyCap * 30;
+        const perTaskNet = isFree ? tier.taskBonus : (tier.taskBonus - tier.taskCost);
+
+        const card = document.createElement("div");
+        card.className = `bg-slate-800 rounded-3xl p-5 shadow-xl border transition ${
+          isAnyActive ? "border-amber-400 ring-2 ring-amber-400/20" : "border-slate-700"
+        }`;
+
+        if (isFree) {
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <span class="text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  ${tier.badge}
+                </span>
+                <h2 class="text-xl font-black text-white mt-1">${tier.name}</h2>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-slate-400">Validity</div>
+                <div class="text-base font-extrabold text-emerald-400">Free (3 Days)</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 bg-slate-900/70 border border-slate-700/60 rounded-2xl p-3 mb-3 text-center">
+              <div>
+                <div class="text-[11px] text-slate-400">Task Cost</div>
+                <div class="text-sm font-bold text-rose-400">Rs. 0</div>
+              </div>
+              <div class="border-x border-slate-800">
+                <div class="text-[11px] text-slate-400">Task Payout</div>
+                <div class="text-sm font-bold text-emerald-400">Rs. ${tier.taskBonus}</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-slate-400">Daily Limit</div>
+                <div class="text-sm font-bold text-indigo-300">+Rs. ${tier.dailyCap}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-4 px-1">
+              <span><i class="fa-solid fa-list-check mr-1 text-slate-500"></i> ${tier.dailyTasks} Tasks/Day</span>
+              <span>3-Day Max Net: <strong class="text-emerald-400">+Rs. ${tier.dailyCap * 3}</strong></span>
+            </div>
+
+            <button
+              onclick="activatePlan(0, 'free_3d')"
+              class="w-full py-3 px-4 rounded-xl font-bold text-sm transition ${
+                isFreeExpired
+                  ? "bg-rose-600/20 text-rose-300 border border-rose-500/40"
+                  : isAnyActive
+                  ? "bg-emerald-600/20 text-emerald-300 border border-emerald-500/40"
+                  : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-md"
+              }"
+            >
+              ${
+                isFreeExpired
+                  ? '<i class="fa-solid fa-clock-rotate-left mr-1.5"></i>3-Day Free Limit Reached (Upgrade Below)'
+                  : isAnyActive
+                  ? `<i class="fa-solid fa-check mr-1.5"></i>Active Free (Day ${freeDay}/${FREE_MAX_DAYS})`
+                  : "Activate Free (3 Days Only)"
+              }
+            </button>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <span class="text-[10px] font-extrabold tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-slate-700 text-slate-300">
+                  ${tier.badge}
+                </span>
+                <h2 class="text-xl font-black text-white mt-1">${tier.name}</h2>
+              </div>
+              <div class="text-right text-xs">
+                <div class="text-amber-400 font-bold">Weekly: Rs. ${tier.weeklyCost.toLocaleString()}</div>
+                <div class="text-emerald-400 font-bold">Monthly: Rs. ${tier.monthlyCost.toLocaleString()}</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 bg-slate-900/70 border border-slate-700/60 rounded-2xl p-3 mb-3 text-center">
+              <div>
+                <div class="text-[11px] text-slate-400">Task Cost</div>
+                <div class="text-sm font-bold text-rose-400">Rs. ${tier.taskCost.toLocaleString()}</div>
+              </div>
+              <div class="border-x border-slate-800">
+                <div class="text-[11px] text-slate-400">Task Payout</div>
+                <div class="text-sm font-bold text-emerald-400">Rs. ${tier.taskBonus.toLocaleString()}</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-slate-400">Daily Net</div>
+                <div class="text-sm font-bold text-indigo-300">+Rs. ${tier.dailyCap.toLocaleString()}</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs text-slate-400 bg-slate-900/40 rounded-xl p-2.5 mb-4">
+              <div>7d Net: <strong class="text-slate-200">+Rs. ${weeklyNet.toLocaleString()}</strong></div>
+              <div class="text-right">30d Net: <strong class="text-emerald-400">+Rs. ${monthlyNet.toLocaleString()}</strong></div>
+              <div><i class="fa-solid fa-list-check mr-1 text-slate-500"></i> ${tier.dailyTasks} Tasks/Day</div>
+              <div class="text-right">Net/Task: <strong class="text-slate-200">+Rs. ${perTaskNet}</strong></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                onclick="activatePlan(${tier.level}, 'weekly')"
+                class="py-3 px-3 rounded-xl font-bold text-xs transition ${
+                  isWeeklyActive
+                    ? "bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 cursor-default"
+                    : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-md"
+                }"
+              >
+                ${isWeeklyActive ? '<i class="fa-solid fa-check mr-1"></i>Weekly Active' : `Weekly • Rs. ${tier.weeklyCost.toLocaleString()}`}
+              </button>
+
+              <button
+                onclick="activatePlan(${tier.level}, 'monthly')"
+                class="py-3 px-3 rounded-xl font-bold text-xs transition ${
+                  isMonthlyActive
+                    ? "bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 cursor-default"
+                    : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md"
+                }"
+              >
+                ${isMonthlyActive ? '<i class="fa-solid fa-check mr-1"></i>Monthly Active' : `Monthly • Rs. ${tier.monthlyCost.toLocaleString()}`}
+              </button>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-2.5 px-1 text-[11px] text-slate-400">
+              <button onclick="previewPlan(${tier.level}, 'weekly')" class="hover:text-white underline">Test Weekly</button>
+              <button onclick="previewPlan(${tier.level}, 'monthly')" class="hover:text-white underline">Test Monthly</button>
+            </div>
+          `;
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", loadState);
+  </script>
+</body>
+</html>

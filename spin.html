@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass IPS - Spin & Earn</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --bg-card-hover: #262134;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding-bottom: 120px;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--bg-main);
+            font-size: 14px;
+        }
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gold-accent);
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .header-center .logo-icon {
+            color: var(--purple-accent);
+        }
+        .header-right {
+            font-size: 18px;
+        }
+        /* Main Content Wrapper */
+        .main-content {
+            padding: 0 12px;
+        }
+        /* Image Slider Styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background-color: #0b090e;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Banner Notice */
+        .banner-section {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 4px;
+        }
+        .banner-notice {
+            display: flex;
+            gap: 10px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            align-items: flex-start;
+        }
+        .notice-icon {
+            color: var(--gold-accent);
+            margin-top: 2px;
+        }
+        /* Grid Menu */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .menu-card {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            padding: 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-card:active {
+            background-color: var(--bg-card-hover);
+        }
+        .menu-card.full-width {
+            grid-column: span 2;
+        }
+        .menu-icon {
+            font-size: 20px;
+            color: var(--purple-accent);
+        }
+        .menu-card span, .menu-card a {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        /* Task Hall & Spin Section */
+        .section-title {
+            font-size: 18px;
+            color: var(--gold-accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .task-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+        }
+        .stat-icon {
+            color: var(--purple-accent);
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--gold-accent);
+        }
+        /* Task Progress Box */
+        .task-progress-box {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #2d2640;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .progress-bar-fill {
+            width: 100%;
+            height: 100%;
+            background-color: var(--gold-accent);
+        }
+        .starting-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .starting-btn:active {
+            background-color: var(--gold-accent);
+            color: var(--bg-main);
+        }
+
+        /* Spin Game Card */
+        .spin-section {
+            background: linear-gradient(135deg, #1b1724, #262134);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .spin-wheel-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 16px auto;
+            border-radius: 50%;
+            border: 4px solid var(--gold-accent);
+            background: radial-gradient(circle, #2d2640, #121019);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(229, 193, 88, 0.3);
+            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
+        }
+        .wheel-center-pointer {
+            position: absolute;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #ef4444;
+            z-index: 10;
+        }
+        .wheel-text {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--gold-accent);
+        }
+        .spin-btn {
+            background: linear-gradient(135deg, var(--gold-accent), #ca8a04);
+            color: #121019;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .spin-btn:active {
+            transform: scale(0.95);
+        }
+        .ticket-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+        .ticket-info span {
+            color: var(--purple-accent);
+            font-weight: bold;
+        }
+
+        /* Important Notice Box */
+        .important-notice {
+            background: linear-gradient(135deg, #1b1724, #121019);
+            border: 1px solid #2d2640;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .important-notice h3 {
+            font-size: 14px;
+            color: var(--gold-accent);
+            margin-bottom: 8px;
+        }
+        .important-notice ul {
+            list-style: none;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .important-notice li i {
+            font-size: 6px;
+            color: var(--purple-accent);
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        /* Vision and Mission Full Image Section */
+        .vision-mission-section-img {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            background-color: var(--bg-card);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .vm-full-banner {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Draggable Floating Elements */
+        .floating-support, .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+        }
+        .floating-support { bottom: 100px; }
+        .floating-gold-card { bottom: 165px; border-radius: 6px; height: 65px; background: linear-gradient(135deg, #fde047, #ca8a04); }
+        .floating-support img, .floating-gold-card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; border-radius: inherit; }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #181522;
+            border-top: 1px solid #2d2640;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 999;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            gap: 4px;
+        }
+        .nav-item i {
+            font-size: 18px;
+        }
+        .nav-item.active {
+            color: var(--purple-accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="header">
+        <div class="header-left">
+            <span>Language</span>
+        </div>
+        <div class="header-center">
+            <i class="fa-solid fa-book-open-reader logo-icon"></i>
+            <span class="logo-text">CIPS</span>
+        </div>
+        <div class="header-right">
+            <i class="fa-solid fa-comment-dots"></i>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Banner Section with Image Slider -->
+        <section class="banner-section">
+            <div class="slider-container">
+                <div class="slide active"><img src="slide1.jpg" alt="Slide 1"></div>
+                <div class="slide"><img src="slide2.jpg" alt="Slide 2"></div>
+                <div class="slide"><img src="slide3.jpg" alt="Slide 3"></div>
+                <div class="slide"><img src="slide4.jpg" alt="Slide 4"></div>
+            </div>
+            <div class="banner-notice">
+                <i class="fa-solid fa-bullhorn notice-icon"></i>
+                <p>Gratitude, execution, mutual assistance and sharing, helping others, and fostering teamwork are the core values of Connection IPS</p>
+            </div>
+        </section>
+
+        <!-- Navigation Grid Options -->
+        <section class="grid-menu">
+            <div class="menu-card">
+                <i class="fa-solid fa-book-bookmark menu-icon"></i>
+                <a href="about-us.html" style="text-decoration: none; color: inherit;">About Us</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-building menu-icon"></i>
+                <a href="company-profile.html" style="text-decoration: none; color: inherit;">Company Profile</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-wallet menu-icon"></i>
+                <a href="recharge.html" style="text-decoration: none; color: inherit;">Recharge</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-money-bill-transfer menu-icon"></i>
+                <a href="withdrawal.html" style="text-decoration: none; color: inherit;">Withdrawal</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-id-card menu-icon"></i>
+                <a href="jadu.html" style="text-decoration: none; color: inherit;">जादु – कार्ड</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-clapperboard menu-icon"></i>
+                <a href="#" style="text-decoration: none; color: inherit;">Video tutorial</a>
+            </div>
+            <div class="menu-card full-width">
+                <i class="fa-solid fa-clipboard-list menu-icon"></i>
+                <a href="freeplannedtasks.html" style="text-decoration: none; color: inherit;">Tasks</a>
+            </div>
+        </section>
+
+        <!-- Task Hall Section -->
+        <section class="task-hall-section">
+            <h2 class="section-title">Task hall</h2>
+            <div class="task-stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-chart-line stat-icon"></i>
+                    <span class="stat-label">Today's earnings</span>
+                    <span class="stat-value" id="todaysEarnings">NPR 0</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-wallet stat-icon"></i>
+                    <span class="stat-label">Balance</span>
+                    <span class="stat-value" id="walletBalance">NPR 0.00</span>
+                </div>
+            </div>
+
+            <!-- Task Progression Box -->
+            <div class="task-progress-box">
+                <div class="progress-header">
+                    <span class="progress-title" id="planTitle">Free Plan (Day 1 of 3)</span>
+                    <span class="progress-count" id="taskCount">5/5</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+                <button class="starting-btn" id="startTaskBtn">Starting Now</button>
+            </div>
+        </section>
+
+        <!-- Spin Game Section (Ticket System like Taka Live) -->
+        <section class="spin-section">
+            <h2 class="section-title" style="margin-bottom: 8px;"><i class="fa-solid fa-dharmachakra"></i> Lucky Spin Game</h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Spin the wheel to win bonus NPR cash directly to your balance!</p>
+            
+            <div class="spin-wheel-container" id="spinWheel">
+                <div class="wheel-center-pointer"></div>
+                <div class="wheel-text" id="wheelText">SPIN</div>
+            </div>
+
+            <button class="spin-btn" id="spinBtn"><i class="fa-solid fa-play"></i> Spin Now</button>
+            <div class="ticket-info">Available Spin Tickets: <span id="ticketCount">3</span></div>
+            <button onclick="getMoreTickets()" style="margin-top: 10px; background: transparent; border: 1px dashed var(--purple-accent); color: var(--purple-accent); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">
+                <i class="fa-solid fa-share-nodes"></i> Invite Friends for +2 Tickets
+            </button>
+        </section>
+
+        <!-- Important Notice -->
+        <section class="important-notice">
+            <h3>Important Notice</h3>
+            <ul>
+                <li><i class="fa-solid fa-circle-dot"></i> Working hours: 00:00-23:59</li>
+                <li><i class="fa-solid fa-circle-dot"></i> Free trial plan is valid for 3 days only. Please upgrade after expiration!</li>
+                <li><i class="fa-solid fa-circle-dot"></i> Spin tickets can be earned by inviting friends or completing daily tasks.</li>
+            </ul>
+        </section>
+
+        <!-- Vision and Mission Section -->
+        <section class="vision-mission-section-img">
+            <img src="vision-mission-banner.jpg" alt="Our Vision and Mission - CIPS" class="vm-full-banner" onerror="this.src='vision-mission.jpg'">
+        </section>
+    </main>
+
+    <!-- Draggable Floating Elements -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='customer.png'">
+    </div>
+    <div id="draggableGoldCard" class="floating-gold-card">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.style.display='none'">
+    </div>
+
+    <!-- App Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Position</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-gem"></i>
+            <span>Invite</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-gift"></i>
+            <span>Profit</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>My</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript for Tasks, Spin Game & Tickets -->
+    <script>
+        // Image Slider
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        setInterval(nextSlide, 3000);
+
+        // State Management
+        let balance = parseFloat(localStorage.getItem('cips_balance') || '0');
+        let todaysEarnings = parseFloat(localStorage.getItem('cips_todays_earnings') || '0');
+        let currentDay = parseInt(localStorage.getItem('cips_free_day') || '1');
+        let spinTickets = parseInt(localStorage.getItem('cips_spin_tickets') || '3');
+        let lastDateCompleted = localStorage.getItem('cips_last_date') || '';
+        
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        if (lastDateCompleted !== todayStr && lastDateCompleted !== '') {
+            todaysEarnings = 0;
+            if (localStorage.getItem('cips_day_completed_' + lastDateCompleted) === 'true' && currentDay < 3) {
+                currentDay++;
+                localStorage.setItem('cips_free_day', currentDay);
+            }
+            localStorage.setItem('cips_todays_earnings', '0');
+        }
+
+        function updateUI() {
+            document.getElementById('walletBalance').textContent = `NPR ${balance.toFixed(2)}`;
+            document.getElementById('todaysEarnings').textContent = `NPR ${todaysEarnings}`;
+            document.getElementById('ticketCount').textContent = spinTickets;
+            
+            if (currentDay <= 3) {
+                document.getElementById('planTitle').textContent = `Free Plan (Day ${currentDay} of 3)`;
+            } else {
+                document.getElementById('planTitle').textContent = `Free Plan Expired`;
+                document.getElementById('startTaskBtn').textContent = 'Plan Expired - Recharge to Continue';
+                document.getElementById('startTaskBtn').style.borderColor = '#ef4444';
+                document.getElementById('startTaskBtn').style.color = '#ef4444';
+            }
+        }
+
+        // Spin Game Logic
+        const prizes = [10, 20, 50, 5, 100, 0, 20, 10];
+        let isSpinning = false;
+
+        document.getElementById('spinBtn').addEventListener('click', () => {
+            if (isSpinning) return;
+            if (spinTickets <= 0) {
+                alert('No spin tickets remaining! Invite friends to earn more tickets.');
+                return;
+            }
+
+            spinTickets--;
+            localStorage.setItem('cips_spin_tickets', spinTickets);
+            updateUI();
+
+            isSpinning = true;
+            const wheel = document.getElementById('spinWheel');
+            const randomDegree = Math.floor(Math.random() * 360) + 1440; // At least 4 full rotations
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+            setTimeout(() => {
+                const winningPrize = prizes[Math.floor(Math.random() * prizes.length)];
+                if (winningPrize > 0) {
+                    balance += winningPrize;
+                    localStorage.setItem('cips_balance', balance);
+                    updateUI();
+                    alert(`Congratulations! You won NPR ${winningPrize} from the Spin Wheel!`);
+                } else {
+                    alert('Better luck next time! Try again with another ticket.');
+                }
+                isSpinning = false;
+            }, 4000);
+        });
+
+        function getMoreTickets() {
+            spinTickets += 2;
+            localStorage.setItem('cips_spin_tickets', spinTickets);
+            updateUI();
+            alert('Referral link shared successfully! You received +2 Spin Tickets.');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+
+            const startTaskBtn = document.getElementById('startTaskBtn');
+            const todaysCompletedKey = 'cips_day_completed_' + todayStr;
+
+            startTaskBtn.addEventListener('click', () => {
+                if (currentDay > 3) {
+                    alert('Your 3-day free trial has ended. Please recharge to unlock daily tasks!');
+                    return;
+                }
+
+                if (localStorage.getItem(todaysCompletedKey) === 'true') {
+                    alert('You have already completed today’s free tasks (NPR 100 limit reached). Try the Spin Wheel for extra fun!');
+                    return;
+                }
+
+                startTaskBtn.textContent = 'Processing Tasks...';
+                startTaskBtn.style.opacity = '0.7';
+                
+                setTimeout(() => {
+                    todaysEarnings = 100;
+                    balance += 100;
+
+                    localStorage.setItem('cips_balance', balance);
+                    localStorage.setItem('cips_todays_earnings', todaysEarnings);
+                    localStorage.setItem(todaysCompletedKey, 'true');
+                    localStorage.setItem('cips_last_date', todayStr);
+
+                    updateUI();
+
+                    alert(`Task completed successfully! You earned NPR 100 and +1 bonus Spin Ticket for Day ${currentDay}.`);
+                    spinTickets += 1;
+                    localStorage.setItem('cips_spin_tickets', spinTickets);
+                    updateUI();
+
+                    startTaskBtn.textContent = 'Completed Today';
+                    startTaskBtn.style.opacity = '1';
+                }, 1200);
+            });
+
+            // Navigation tabs
+            const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Dragging utility
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+                    initialX = clientX;
+                    initialY = clientY;
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

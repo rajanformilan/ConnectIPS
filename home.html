@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass IPS</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --bg-card-hover: #262134;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+        - {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding-bottom: 120px;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--bg-main);
+            font-size: 14px;
+        }
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gold-accent);
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .header-center .logo-icon {
+            color: var(--purple-accent);
+        }
+        .header-right {
+            font-size: 18px;
+        }
+        /* Main Content Wrapper */
+        .main-content {
+            padding: 0 12px;
+        }
+        /* Image Slider Styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background-color: #0b090e;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Banner Notice */
+        .banner-section {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 4px;
+        }
+        .banner-notice {
+            display: flex;
+            gap: 10px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            align-items: flex-start;
+        }
+        .notice-icon {
+            color: var(--gold-accent);
+            margin-top: 2px;
+        }
+        /* Grid Menu */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .menu-card {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            padding: 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-card:active {
+            background-color: var(--bg-card-hover);
+        }
+        .menu-card.full-width {
+            grid-column: span 2;
+        }
+        .menu-icon {
+            font-size: 20px;
+            color: var(--purple-accent);
+        }
+        .menu-card span, .menu-card a {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        /* Task Hall */
+        .section-title {
+            font-size: 18px;
+            color: var(--gold-accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .task-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+        }
+        .stat-icon {
+            color: var(--purple-accent);
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--gold-accent);
+        }
+        /* Task Progress Box */
+        .task-progress-box {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #2d2640;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .progress-bar-fill {
+            width: 100%;
+            height: 100%;
+            background-color: var(--gold-accent);
+        }
+        .starting-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .starting-btn:active {
+            background-color: var(--gold-accent);
+            color: var(--bg-main);
+        }
+        /* Important Notice Box */
+        .important-notice {
+            background: linear-gradient(135deg, #1b1724, #121019);
+            border: 1px solid #2d2640;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .important-notice h3 {
+            font-size: 14px;
+            color: var(--gold-accent);
+            margin-bottom: 8px;
+        }
+        .important-notice ul {
+            list-style: none;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .important-notice li i {
+            font-size: 6px;
+            color: var(--purple-accent);
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        /* Vision and Mission Full Image Section */
+        .vision-mission-section-img {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            background-color: var(--bg-card);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .vm-full-banner {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+        /* Draggable Floating Customer Service Icon */
+        .floating-support {
+            position: fixed;
+            right: 16px;
+            bottom: 100px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-support:active {
+            cursor: grabbing;
+        }
+        .floating-support .help {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+        /* Draggable Floating Golden Card Graphic */
+        .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            bottom: 165px;
+            width: 50px;
+            height: 65px;
+            background: linear-gradient(135deg, #fde047, #ca8a04);
+            border-radius: 6px;
+            padding: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid #fef08a;
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-gold-card:active {
+            cursor: grabbing;
+        }
+        .gold-card-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block; 
+            pointer-events: none; 
+        }
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #181522;
+            border-top: 1px solid #2d2640;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 999;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            gap: 4px;
+        }
+        .nav-item i {
+            font-size: 18px;
+        }
+        .nav-item.active {
+            color: var(--purple-accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <header class="header">
+        <div class="header-left">
+            <span>Language</span>
+        </div>
+        <div class="header-center">
+            <i class="fa-solid fa-book-open-reader logo-icon"></i>
+            <span class="logo-text">CIPS</span>
+        </div>
+        <div class="header-right">
+            <i class="fa-solid fa-comment-dots"></i>
+        </div>
+    </header>
+
+    <!-- Main Container / Scrollable Content -->
+    <main class="main-content">
+
+        <!-- Banner Section with Image Slider -->
+        <section class="banner-section">
+            <div class="slider-container">
+                <div class="slide active"><img src="slide1.jpg" alt="Slide 1"></div>
+                <div class="slide"><img src="slide2.jpg" alt="Slide 2"></div>
+                <div class="slide"><img src="slide3.jpg" alt="Slide 3"></div>
+                <div class="slide"><img src="slide4.jpg" alt="Slide 4"></div>
+            </div>
+            <div class="banner-notice">
+                <i class="fa-solid fa-bullhorn notice-icon"></i>
+                <p>Gratitude, execution, mutual assistance and sharing, helping others, and fostering teamwork are the core values of Connection IPS</p>
+            </div>
+        </section>
+
+        <!-- Navigation Grid Options -->
+        <section class="grid-menu">
+            <div class="menu-card">
+                <i class="fa-solid fa-book-bookmark menu-icon"></i>
+                <a href="about-us.html" style="text-decoration: none; color: inherit;">About Us</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-building menu-icon"></i>
+                <a href="company-profile.html" style="text-decoration: none; color: inherit;">Company Profile</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-wallet menu-icon"></i>
+                <a href="recharge.html" style="text-decoration: none; color: inherit;">Recharge</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-money-bill-transfer menu-icon"></i>
+                <a href="withdrawal.html" style="text-decoration: none; color: inherit;">Withdrawal</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-id-card menu-icon"></i>
+                <a href="jadu.html"style="text-decoration: none; color: inherit;">जादु – कार्ड</a>
+            </div>
+            <div class="menu-card">
+                <i class="fa-solid fa-clapperboard menu-icon"></i>
+                <a href="#" style="text-decoration: none; color: inherit;">Video tutorial</a>
+            </div>
+            <div class="menu-card full-width">
+                <i class="fa-solid fa-clipboard-list menu-icon"></i>
+                <a href="task.html"style="text-decoration: none; color: inherit;">Tasks</a>
+            </div>
+        </section>
+
+        <!-- Task Hall Section -->
+        <section class="task-hall-section">
+            <h2 class="section-title">Task hall</h2>
+            <div class="task-stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-chart-line stat-icon"></i>
+                    <span class="stat-label">Today's earnings</span>
+                    <span class="stat-value">NPR 0</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-wallet stat-icon"></i>
+                    <span class="stat-label">Balance</span>
+                    <span class="stat-value">NPR 0.00</span>
+                </div>
+            </div>
+
+            <!-- Task Progression Box -->
+            <div class="task-progress-box">
+                <div class="progress-header">
+                    <span class="progress-title">Starting</span>
+                    <span class="progress-count">5/5</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill"></div>
+                </div>
+                <button class="starting-btn" id="startTaskBtn">Starting Now</button>
+            </div>
+        </section>
+
+        <!-- Important Notice -->
+        <section class="important-notice">
+            <h3>Important Notice</h3>
+            <ul>
+                <li><i class="fa-solid fa-circle-dot"></i> Working hours: 00:00-23:59</li>
+                <li><i class="fa-solid fa-circle-dot"></i> For further assistance, please contact Recruiting Manager Services!</li>
+            </ul>
+        </section>
+
+        <!-- Vision and Mission Section (Image Banner) -->
+        <section class="vision-mission-section-img">
+            <img src="vision-mission-banner.jpg" alt="Our Vision and Mission - CIPS" class="vm-full-banner" onerror="this.src='vision-mission.jpg'">
+        </section>
+
+    </main>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='customer.png'">
+    </div>
+
+    <!-- Draggable Floating Golden Card Graphic -->
+    <div id="draggableGoldCard" class="floating-gold-card">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.style.display='none'">
+    </div>
+
+    <!-- App Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="position.html" class="nav-item">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Position</span>
+        </a>
+        <a href="invite.html" class="nav-item">
+            <i class="fa-solid fa-gem"></i>
+            <span>Invite</span>
+        </a>
+        <a href="profit.html" class="nav-item">
+            <i class="fa-solid fa-gift"></i>
+            <span>Profit</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>My</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript for Slider, Tasks, and Dragging -->
+    <script>
+        // Image Slider Logic
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        setInterval(nextSlide, 3000);
+
+        // Task Button Behavior
+        document.addEventListener('DOMContentLoaded', () => {
+            const startTaskBtn = document.getElementById('startTaskBtn');
+            startTaskBtn.addEventListener('click', () => {
+                startTaskBtn.textContent = 'Processing...';
+                startTaskBtn.style.opacity = '0.7';
+                
+                setTimeout(() => {
+                    alert('Task execution completed successfully!');
+                    startTaskBtn.textContent = 'Starting Now';
+                    startTaskBtn.style.opacity = '1';
+                }, 1000);
+            });
+
+            // Handle bottom navigation tab switching state visual toggle
+            const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Make Elements Movable (Draggable with Mouse and Touch)
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

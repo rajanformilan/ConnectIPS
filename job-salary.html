@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Job and salary information for Compass IPS (CIPS)</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --gold-text: #e5c158;
+            --text-main: #f3f4f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--gold-text);
+            padding: 16px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        /* Header / Title Area */
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            color: var(--gold-text);
+            font-weight: 500;
+            font-size: 17px;
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .close-icon {
+            color: var(--text-main);
+            font-size: 18px;
+            cursor: pointer;
+            padding-left: 15px;
+            text-decoration: none;
+        }
+
+        /* Content Sections */
+        .section-title {
+            color: var(--gold-text);
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* List Styling */
+        ol.job-list {
+            list-style-position: outside;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        ol.job-list li {
+            margin-bottom: 18px;
+            padding-left: 5px;
+            color: var(--gold-text);
+        }
+
+        ol.job-list li strong {
+            color: var(--gold-text);
+            font-weight: 600;
+        }
+
+        /* Salary Section */
+        .salary-info {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .salary-line {
+            display: block;
+            color: var(--gold-text);
+        }
+
+        /* Evaluation Paragraph */
+        .evaluation-text {
+            margin-top: 25px;
+            color: var(--gold-text);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Area with Title and Close Button -->
+    <header class="header-area">
+        <h1 class="main-title">Job and salary information for Connection IPS (CIPS)</h1>
+        <a href="about.html" class="close-icon"><i class="fa-solid fa-xmark"></i></a>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <strong class="section-title">Workgroup Assistant Responsibilities and Benefits:</strong>
+
+        <ol class="job-list">
+            <li>
+                <strong>Answer Questions:</strong> Actively participate in group discussions and presentations to help new employees solve work-related problems and quickly adapt to the work environment.
+            </li>
+            <li>
+                <strong>Facilitate Communication:</strong> Communicate proactively, foster a positive team atmosphere, share creative content and professional knowledge related to the company platform, and improve the overall quality of the team.
+            </li>
+            <li>
+                <strong>Maintain Order:</strong> Actively maintain the company image and ensure team order. Promote harmonious communication among members, provide necessary advice and support to new members, and build a more cohesive and efficient team.
+            </li>
+            <li>
+                <strong>Share Work Results:</strong> Share screenshots of completed daily tasks and successful exit case studies, and invite subordinates to join the group.
+            </li>
+            <li>
+                <strong>Foster a Positive Work Atmosphere:</strong> Encourage and motivate team members and other group members to share various work screenshots, fostering a positive collaborative atmosphere.
+            </li>
+            <li>
+                <strong>Development Support:</strong> Guide employees to become familiar with and proficient in platform operation and work methods, encourage them to continuously improve to increase income, and guide team development.
+            </li>
+        </ol>
+
+        <div class="salary-info">
+            <span class="salary-line">Internship Assistant Weekly Salary: 1000 Nepalese Rupees</span>
+            <span class="salary-line">Credit Score 18: Level 1 Assistant, Monthly Salary: 15000 Nepalese Rupees</span>
+            <span class="salary-line">Credit Score 30: Level 2 Assistant, Monthly Salary: 35000 Nepalese Rupees</span>
+            <span class="salary-line">Credit Score 50: Level 1 Supervisor, Monthly Salary: 85000 Nepalese Rupees</span>
+            <span class="salary-line">Credit Score 80: Level 2 Supervisor, Monthly Salary: 165000 Nepalese Rupees</span>
+            <span class="salary-line">Credit Score 150: Level 3 Supervisor, Monthly Salary: 295000 Nepalese Rupees</span>
+        </div>
+
+        <p class="evaluation-text">
+            We will conduct a comprehensive management performance evaluation based on team management, recruitment experience, and group discussion leadership skills. Those who fail the evaluation will be automatically demoted.
+        </p>
+    </main>
+
+</body>
+</html>

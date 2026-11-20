@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ConnectionIPS - Register</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #1A1A2E;
+            --bg-panel: #24243E;
+            --accent-cyan: #38EBC1;
+            --text-light: #FFFFFF;
+            --text-grey: #B0B0C3;
+            --btn-yellow: #F4C542;
+            --border-color: #3A3A55;
+            --bg-card: #1b1724;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Top Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .back-arrow {
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .header-language {
+            font-size: 14px;
+            color: var(--text-grey);
+            cursor: pointer;
+        }
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(180deg, #2D2D51 0%, var(--bg-dark) 100%);
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            margin-top: -10px;
+            position: relative;
+            z-index: 1;
+        }
+        .register-header {
+            font-size: 32px;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+        .input-icon {
+            font-size: 18px;
+            margin-right: 12px;
+            color: var(--text-grey);
+            width: 20px;
+            text-align: center;
+        }
+        .country-code {
+            color: var(--text-light);
+            font-size: 15px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-arrow {
+            font-size: 10px;
+            margin-left: 5px;
+            color: var(--text-grey);
+        }
+        input[type="text"], 
+        input[type="password"], 
+        input[type="number"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 15px;
+            outline: none;
+        }
+        input::placeholder {
+            color: var(--text-grey);
+        }
+        /* Verification Code Area */
+        .verify-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .verify-input-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .captcha-image {
+            width: 100px;
+            height: 35px;
+            background-color: #FFFFFF;
+            border-radius: 4px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            font-family: monospace;
+            letter-spacing: 3px;
+            cursor: pointer;
+            user-select: none;
+        }
+        /* Referral ID */
+        .referral-group {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            color: var(--text-light);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+        /* Register Button */
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--btn-yellow);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        /* OR separator */
+        .or-text {
+            text-align: center;
+            color: var(--text-grey);
+            font-size: 12px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .or-text::before, .or-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+        .or-text::before { left: 0; }
+        .or-text::after { right: 0; }
+        
+        /* Alert Message Box */
+        .alert-msg {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+        .alert-success { background-color: #2e7d32; color: #fff; }
+        .alert-error { background-color: #c62828; color: #fff; }
+
+        /* Draggable Floating Customer Service Icon */
+        .floating-support {
+            position: fixed;
+            right: 16px;
+            bottom: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-support:active {
+            cursor: grabbing;
+        }
+        .floating-support .help {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+        /* Draggable Floating Card Image Graphic */
+        .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            bottom: 95px;
+            width: 45px;
+            height: 55px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-gold-card:active {
+            cursor: grabbing;
+        }
+        .gold-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header Bar -->
+    <header class="top-header">
+        <div class="back-arrow">&lt;</div>
+        <div class="header-title">ConnectionIPS</div>
+        <div class="header-language">Language</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <h1 class="register-header" id="pageHeading">register</h1>
+        
+        <div id="alertBox" class="alert-msg"></div>
+
+        <form id="registerForm">
+            <!-- Phone Number -->
+            <div class="input-group">
+                <i class="fa-solid fa-mobile-screen input-icon"></i>
+                <div class="country-code">
+                    +977 <span class="dropdown-arrow">&#9660;</span>
+                </div>
+                <input type="number" id="phoneInput" placeholder="Please enter your phone number" required>
+            </div>
+
+            <!-- Login Password -->
+            <div class="input-group">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="passInput" placeholder="Please enter the login password" required>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-group">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="confirmPassInput" placeholder="Please confirm your password" required>
+            </div>
+
+            <!-- Verification Code -->
+            <div class="verify-group">
+                <div class="verify-input-wrapper">
+                    <i class="fa-solid fa-shield-halved input-icon"></i>
+                    <input type="text" id="captchaInput" placeholder="Please enter the verification code" required>
+                </div>
+                <div class="captcha-image" id="captchaBox" title="Click to refresh captcha">
+                    4 1 5 1
+                </div>
+            </div>
+
+            <!-- Referral ID -->
+            <div class="referral-group">
+                <i class="fa-solid fa-envelope input-icon" style="color: var(--text-light);"></i>
+                <span>4442043</span>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="register-btn">Register now</button>
+            <div class="or-text">or</div>
+        </form>
+    </main>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='https://i.imgur.com/Y4q0K1u.png'">
+    </div>
+
+    <!-- Draggable Floating Card Image Graphic -->
+    <div class="floating-gold-card" id="draggableGoldCard">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.src='https://i.imgur.com/4m2W66Z.png'">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const captchaBox = document.getElementById('captchaBox');
+            const registerForm = document.getElementById('registerForm');
+            const alertBox = document.getElementById('alertBox');
+            let currentCaptchaText = "";
+
+            function generateCaptcha() {
+                const num1 = Math.floor(Math.random() * 10);
+                const num2 = Math.floor(Math.random() * 10);
+                const num3 = Math.floor(Math.random() * 10);
+                const num4 = Math.floor(Math.random() * 10);
+                
+                currentCaptchaText = `${num1}${num2}${num3}${num4}`;
+                captchaBox.textContent = `${num1} ${num2} ${num3} ${num4}`;
+            }
+
+            generateCaptcha();
+            captchaBox.addEventListener('click', generateCaptcha);
+
+            // Handle Registration Logic
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const phone = document.getElementById('phoneInput').value.trim();
+                const password = document.getElementById('passInput').value;
+                const confirmPassword = document.getElementById('confirmPassInput').value;
+                const enteredCaptcha = document.getElementById('captchaInput').value.trim();
+
+                // Validation checks
+                if (password !== confirmPassword) {
+                    showAlert("Passwords do not match!", "error");
+                    return;
+                }
+
+                if (enteredCaptcha !== currentCaptchaText) {
+                    showAlert("Invalid Verification Code!", "error");
+                    generateCaptcha();
+                    return;
+                }
+
+                // Save data to localStorage to use for login simulation
+                const userData = { phone, password };
+                localStorage.setItem('connectionIPS_user', JSON.stringify(userData));
+
+                showAlert("Registration successful! Redirecting...", "success");
+
+                // Simulate redirect / UI change after successful registration
+                setTimeout(() => {
+                    document.querySelector('.main-container').innerHTML = `
+                        <h1 class="register-header">Welcome!</h1>
+                        <p style="color: var(--text-grey); margin-bottom: 20px;">Your account has been successfully created with phone: <b>+977 ${phone}</b></p>
+                        <button class="register-btn" onclick="location.reload()">Logout / Register Another</button>
+                    `;
+                }, 1500);
+            });
+
+            function showAlert(message, type) {
+                alertBox.textContent = message;
+                alertBox.className = `alert-msg ${type === 'success' ? 'alert-success' : 'alert-error'}`;
+                alertBox.style.display = 'block';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 3000);
+            }
+
+            // Draggable Elements
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

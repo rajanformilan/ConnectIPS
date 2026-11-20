@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Recharge - Compass IPS</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2d2640;
+            --sky-blue: #38bdf8; /* Sky Blue Color Added */
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 120px;
+        }
+        /* Top Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background-color: var(--bg-main);
+            position: relative;
+        }
+        .back-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .header-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--gold-accent);
+        }
+        .header-right {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+        /* Balance Banner */
+        .balance-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .balance-amount {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--gold-accent);
+        }
+        /* Form Container */
+        .form-container {
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .card-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .input-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .text-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            width: 100%;
+        }
+        .text-input::placeholder {
+            color: #4a4063;
+        }
+        /* Recharge Channels Radio Group */
+        .channel-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 4px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+        .radio-option input[type="radio"] {
+            accent-color: var(--gold-accent);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .hidden-channels {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .show-more-btn {
+            background: none;
+            border: none;
+            color: var(--gold-accent);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        /* Transfer Screenshot Upload Box */
+        .upload-box-container {
+            display: flex;
+            align-items: center;
+        }
+        .upload-box {
+            width: 70px;
+            height: 70px;
+            background-color: #231f2e;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .upload-box i {
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+        .upload-box input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        #fileNameDisplay {
+            font-size: 12px;
+            color: var(--gold-accent);
+            margin-top: 4px;
+        }
+        /* Action Buttons */
+        .btn-primary {
+            background-color: var(--gold-accent);
+            color: #121019;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(229, 193, 88, 0.2);
+            width: 100%;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            text-decoration: none;
+            display: block;
+        }
+        /* Bank Information Section */
+        .info-section {
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .info-header-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        /* Sky Blue Colored Text Class */
+        .sky-blue-text {
+            color: var(--sky-blue) !important;
+            font-weight: 500;
+        }
+        .info-title {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .info-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info-card-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .info-card-value {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        /* Bottom Nav Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 900;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            gap: 4px;
+        }
+        .nav-item.active {
+            color: var(--gold-accent);
+        }
+        .nav-item i {
+            font-size: 18px;
+        }
+        /* Draggable Elements */
+        .floating-support, .floating-gold-card {
+            position: fixed;
+            z-index: 1000;
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-support { right: 16px; bottom: 140px; width: 50px; height: 50px; border-radius: 50%; background: var(--bg-card); border: 1px solid rgba(168, 85, 247, 0.4); display: flex; align-items: center; justify-content: center; overflow: hidden;}
+        .floating-support .help { width: 100%; height: 100%; object-fit: cover; pointer-events: none;}
+        .floating-gold-card { right: 16px; bottom: 205px; width: 45px; height: 55px; border-radius: 6px; overflow: hidden;}
+        .gold-card-img { width: 100%; height: 100%; object-fit: cover; pointer-events: none;}
+    </style>
+</head>
+<body>
+    <!-- Top Header Bar -->
+    <header class="top-header">
+        <a href="index.html" class="back-arrow"><i class="fa-solid fa-chevron-left"></i></a>
+        <div class="header-title">Recharge</div>
+        <a href="recharge-record.html" class="header-right">Recharge record</a>
+    </header>
+
+    <!-- Balance Banner -->
+    <div class="balance-banner">
+        <span>Balance</span>
+        <span class="balance-amount">0 NPR</span>
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-container" id="rechargeForm">
+        <!-- Recharge Amount -->
+        <div class="card-box input-row">
+            <label class="input-label">Recharge amount</label>
+            <input type="number" id="rechargeAmount" class="text-input" placeholder="Please enter the recharge amount" required>
+        </div>
+
+        <!-- Recharge Channel Selection -->
+        <div class="card-box input-row">
+            <label class="input-label">Recharge channel</label>
+            <div class="channel-group">
+                <label class="radio-option"><input type="radio" name="channel" value="eSewa Wallet" checked><span>eSewa Wallet</span></label>
+                <label class="radio-option"><input type="radio" name="channel" value="Khalti Digital Wallet"><span>Khalti Digital Wallet</span></label>
+                <label class="radio-option"><input type="radio" name="channel" value="IME Pay"><span>IME Pay</span></label>
+                <label class="radio-option"><input type="radio" name="channel" value="NIC Asia Bank Ltd"><span>NIC Asia Bank Ltd</span></label>
+                <label class="radio-option"><input type="radio" name="channel" value="Global IME Bank"><span>Global IME Bank</span></label>
+                <label class="radio-option"><input type="radio" name="channel" value="Nabil Bank"><span>Nabil Bank</span></label>
+                
+                <!-- Toggle Show More Button -->
+                <button type="button" class="show-more-btn" id="showMoreToggle">
+                    <span>Show more channels (All Banks)</span> <i class="fa-solid fa-chevron-down" id="toggleIcon"></i>
+                </button>
+
+                <!-- Hidden Channels -->
+                <div class="hidden-channels" id="hiddenChannelsContainer">
+                    <label class="radio-option"><input type="radio" name="channel" value="Prabhu Bank"><span>Prabhu Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Rastriya Banijya Bank"><span>Rastriya Banijya Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Nepal Investment Mega Bank (NIMB)"><span>Nepal Investment Mega Bank (NIMB)</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Standard Chartered Bank Nepal"><span>Standard Chartered Bank Nepal</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Sanima Bank"><span>Sanima Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Machhapuchhre Bank"><span>Machhapuchhre Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Kumari Bank"><span>Kumari Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Laxmi Sunrise Bank"><span>Laxmi Sunrise Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Prime Commercial Bank"><span>Prime Commercial Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Citizens Bank International"><span>Citizens Bank International</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Everest Bank"><span>Everest Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Himalayan Bank"><span>Himalayan Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Siddhartha Bank"><span>Siddhartha Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Agriculture Development Bank"><span>Krishi Bikas Bank (Agriculture Development Bank)</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Nepal Bank Limited"><span>Nepal Bank Limited</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Jyoti Bikas Bank"><span>Jyoti Bikas Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Muktinath Bikas Bank"><span>Muktinath Bikas Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Mahalaxmi Bikas Bank"><span>Mahalaxmi Bikas Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Shine Resunga Development Bank"><span>Shine Resunga Development Bank</span></label>
+                    <label class="radio-option"><input type="radio" name="channel" value="Garima Bikas Bank"><span>Garima Bikas Bank</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction ID -->
+        <div class="card-box input-row">
+            <label class="input-label">Transaction ID</label>
+            <input type="text" id="transactionId" class="text-input" placeholder="Please enter the transaction ID/reference" required>
+        </div>
+
+        <!-- Transfer Screenshot -->
+        <div class="card-box input-row">
+            <label class="input-label">Transfer screenshot</label>
+            <div class="upload-box-container">
+                <div class="upload-box">
+                    <i class="fa-solid fa-camera"></i>
+                    <input type="file" id="screenshotFile" accept="image/*">
+                </div>
+            </div>
+            <div id="fileNameDisplay"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <button type="button" id="rechargeNowBtn" class="btn-primary">Recharge now</button>
+        <a href="index.html" class="btn-secondary">Return</a>
+    </div>
+
+    <!-- Bank Details Instructions Section -->
+    <div class="info-section">
+        <!-- Sky Blue Colored Text Applied Here -->
+        <div class="info-header-text sky-blue-text">Please select the following method to transfer the matching amount</div>
+        
+        <div class="info-title">Please complete the transfer according to the information below</div>
+        <div class="info-header-text" style="font-weight: 500; color: var(--text-main);">Selected Channel Transfer</div>
+        
+        <div class="info-card">
+            <span class="info-card-label">Name</span>
+            <span class="info-card-value">Rajan Kandel</span>
+        </div>
+        <div class="info-card">
+            <span class="info-card-label">Bank/Wallet</span>
+            <span class="info-card-value">eSewa / Khalti / Nabil Mobile Banking</span>
+        </div>
+        <div class="info-card">
+            <span class="info-card-label">Account / ID</span>
+            <span class="info-card-value">
+                9819210050
+                <button type="button" class="copy-btn"><i class="fa-regular fa-copy"></i></button>
+            </span>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+        <a href="position.html" class="nav-item"><i class="fa-solid fa-clipboard-list"></i><span>Position</span></a>
+        <a href="invite.html" class="nav-item"><i class="fa-solid fa-gem"></i><span>Invite</span></a>
+        <a href="profit.html" class="nav-item"><i class="fa-solid fa-gift"></i><span>Profit</span></a>
+        <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user"></i><span>My</span></a>
+    </nav>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='customer.png'">
+    </div>
+
+    <!-- Draggable Floating Card Image Graphic -->
+    <div class="floating-gold-card" id="draggableGoldCard">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.src='https://i.imgur.com/4m2W66Z.png'">
+    </div>
+
+    <script>
+        // Show More Toggle Logic
+        const showMoreToggle = document.getElementById('showMoreToggle');
+        const hiddenChannelsContainer = document.getElementById('hiddenChannelsContainer');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        showMoreToggle.addEventListener('click', () => {
+            if (hiddenChannelsContainer.style.display === 'flex') {
+                hiddenChannelsContainer.style.display = 'none';
+                showMoreToggle.querySelector('span').textContent = 'Show more channels (All Banks)';
+                toggleIcon.classList.remove('fa-chevron-up');
+                toggleIcon.classList.add('fa-chevron-down');
+            } else {
+                hiddenChannelsContainer.style.display = 'flex';
+                showMoreToggle.querySelector('span').textContent = 'Show less channels';
+                toggleIcon.classList.remove('fa-chevron-down');
+                toggleIcon.classList.add('fa-chevron-up');
+            }
+        });
+
+        // File upload name display
+        const screenshotInput = document.getElementById('screenshotFile');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        screenshotInput.addEventListener('change', function() {
+            if(this.files && this.files[0]) {
+                fileNameDisplay.textContent = "Selected: " + this.files[0].name;
+            }
+        });
+
+        // Recharge Now Button Action (Opens Email Client to Send Details directly to milankandel584@gmail.com)
+        document.getElementById('rechargeNowBtn').addEventListener('click', () => {
+            const amount = document.getElementById('rechargeAmount').value;
+            const selectedChannel = document.querySelector('input[name="channel"]:checked');
+            const channelName = selectedChannel ? selectedChannel.value : "Not Selected";
+            const transactionId = document.getElementById('transactionId').value;
+            const fileName = screenshotInput.files[0] ? screenshotInput.files[0].name : "No screenshot attached";
+
+            if(!amount || !transactionId) {
+                alert("Please fill in the recharge amount and transaction ID!");
+                return;
+            }
+
+            const emailSubject = encodeURIComponent("New Recharge Request - " + amount + " NPR");
+            const emailBody = encodeURIComponent(
+                "New user recharge request details:\n\n" +
+                "Amount: " + amount + " NPR\n" +
+                "Recharge Channel: " + channelName + "\n" +
+                "Transaction ID: " + transactionId + "\n" +
+                "Screenshot File Name: " + fileName + "\n\n" +
+                "Please verify this transaction."
+            );
+
+            window.location.href = `mailto:milankandel584@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+        });
+
+        // Draggable Elements Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

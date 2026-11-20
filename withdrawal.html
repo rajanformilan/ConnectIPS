@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Withdrawal - Compass IPS</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2d2640;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 120px;
+        }
+
+        /* Top Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background-color: var(--bg-main);
+            position: relative;
+        }
+
+        .back-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--gold-accent);
+        }
+
+        .header-right {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        /* Form Container */
+        .form-container {
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Withdrawal Method Row */
+        .method-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .method-title {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .method-value {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .method-value i {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Withdrawal Amount Section */
+        .section-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .amount-chips {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .chip {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 10px;
+            text-align: center;
+            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip.active, .chip:focus {
+            border-color: var(--gold-accent);
+            color: var(--gold-accent);
+            background-color: rgba(229, 193, 88, 0.05);
+            outline: none;
+        }
+
+        .balance-info {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Password Input Box */
+        .password-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .password-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .password-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            width: 100%;
+        }
+
+        .password-input::placeholder {
+            color: #4a4063;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background-color: var(--gold-accent);
+            color: #121019;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(229, 193, 88, 0.2);
+            transition: opacity 0.2s;
+        }
+
+        .submit-btn:active {
+            opacity: 0.9;
+        }
+
+        /* Instructions Section */
+        .instructions-container {
+            padding: 10px 20px;
+        }
+
+        .instructions-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .instructions-list {
+            list-style-type: decimal;
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .instructions-list li {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Bottom Nav Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--gold-accent);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        /* Draggable Floating Customer Service Icon */
+        .floating-support {
+            position: fixed;
+            right: 16px;
+            bottom: 140px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .floating-support:active {
+            cursor: grabbing;
+        }
+
+        .floating-support .help {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Draggable Floating Card Image Graphic */
+        .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            bottom: 205px;
+            width: 45px;
+            height: 55px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .floating-gold-card:active {
+            cursor: grabbing;
+        }
+
+        .gold-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header Bar -->
+    <header class="top-header">
+        <a href="index.html" class="back-arrow"><i class="fa-solid fa-chevron-left"></i></a>
+        <div class="header-title">Withdrawal</div>
+        <a href="withdrawal-record.html" class="header-right">Withdrawal record</a>
+    </header>
+
+    <!-- Form Section -->
+    <div class="form-container">
+        <!-- Withdrawal Method Card -->
+        <a href="withdrawal-method.html" class="card-box method-row">
+            <span class="method-title">Withdrawal method</span>
+            <span class="method-value"> <i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+
+        <!-- Withdrawal Amount Card -->
+        <div class="card-box">
+            <div class="section-label">Withdrawal amount</div>
+            <div class="amount-chips">
+                <button type="button" class="chip active">300</button>
+                <button type="button" class="chip">2000</button>
+                <button type="button" class="chip">5000</button>
+                <button type="button" class="chip">10000</button>
+                <button type="button" class="chip">20000</button>
+                <button type="button" class="chip">30000</button>
+                <button type="button" class="chip">50000</button>
+                <button type="button" class="chip">100000</button>
+                <button type="button" class="chip">200000</button>
+                <button type="button" class="chip">300000</button>
+                <button type="button" class="chip">500000</button>
+                <button type="button" class="chip">1M</button>
+                <button type="button" class="chip">10M</button>
+            </div>
+            <div class="balance-info">Balance: NPR 0.00</div>
+        </div>
+
+        <!-- Withdraw Password Card -->
+        <div class="card-box password-row">
+            <label class="password-label">Withdraw password</label>
+            <input type="password" class="password-input" placeholder="Please input Withdraw password">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" class="submit-btn">Submit</button>
+    </div>
+
+    <!-- Instructions Section -->
+    <div class="instructions-container">
+        <div class="instructions-title">Withdrawal Instructions:</div>
+        <ol class="instructions-list">
+            <li>Each account can only withdraw once per day.[cite: 3]</li>
+            <li>Daily withdrawal hours are from 11:30 AM to 6:30 (Nepal time).[cite: 3]</li>
+            <li>Withdrawal funds will arrive in your linked bank account within 1-96 hours. Please wait patiently.[cite: 3]</li>
+        </ol>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="position.html" class="nav-item">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span>Position</span>
+        </a>
+        <a href="invite.html" class="nav-item">
+            <i class="fa-solid fa-gem"></i>
+            <span>Invite</span>
+        </a>
+        <a href="profit.html" class="nav-item">
+            <i class="fa-solid fa-gift"></i>
+            <span>Profit</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fa-solid fa-user"></i>
+            <span>My</span>
+        </a>
+    </nav>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='customer.png'">
+    </div>
+
+    <!-- Draggable Floating Card Image Graphic -->
+    <div class="floating-gold-card" id="draggableGoldCard">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.src='https://i.imgur.com/4m2W66Z.png'">
+    </div>
+
+    <script>
+        // Amount chip selection toggle
+        const chips = document.querySelectorAll('.chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
+
+        // Draggable Elements Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

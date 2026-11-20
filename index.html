@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Compass IPS - Login</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2d2640;
+            --error-color: #f87171;
+            --success-color: #4ade80;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Top Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--bg-main);
+            font-size: 14px;
+        }
+        .back-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .header-language {
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* Logo Area */
+        .logo-section {
+            text-align: center;
+            margin: 30px 0 40px 0;
+        }
+        .logo-img {
+            width: 140px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        /* Form Inputs Container */
+        form {
+            width: 100%;
+            max-width: 400px;
+        }
+        .input-group {
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+        .input-icon {
+            font-size: 16px;
+            margin-right: 12px;
+            color: var(--text-muted);
+            width: 20px;
+            text-align: center;
+        }
+        .country-code {
+            color: var(--text-main);
+            font-size: 15px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-arrow {
+            font-size: 10px;
+            margin-left: 5px;
+            color: var(--text-muted);
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="number"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+        }
+        input::placeholder {
+            color: var(--text-muted);
+        }
+        .eye-icon {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+        }
+        .status-message {
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 16px;
+            min-height: 18px;
+            color: var(--error-color);
+        }
+        /* Remember Checkbox Row */
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .remember-row input[type="checkbox"] {
+            accent-color: var(--purple-accent);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        /* Buttons */
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--gold-accent);
+            color: #121019;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+        .login-btn:active {
+            opacity: 0.85;
+        }
+        /* OR separator */
+        .or-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .or-text::before, .or-text::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 44%;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+        .or-text::before { left: 0; }
+        .or-text::after { right: 0; }
+        .register-outline-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--gold-accent);
+            border: 1px solid var(--gold-accent);
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        /* Draggable Floating Customer Service Icon */
+        .floating-support {
+            position: fixed;
+            right: 16px;
+            bottom: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-support:active {
+            cursor: grabbing;
+        }
+        .floating-support .help {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+        /* Draggable Floating Card Image Graphic */
+        .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            bottom: 95px;
+            width: 45px;
+            height: 55px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            cursor: grab;
+            touch-action: none;
+        }
+        .floating-gold-card:active {
+            cursor: grabbing;
+        }
+        .gold-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header Bar -->
+    <header class="top-header">
+        <div class="back-arrow" onclick="history.back()"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="header-language">Language</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <img src="logo.png" alt="CIPS Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='block';">
+            <div id="fallbackLogo" style="font-size: 24px; font-weight: bold; color: var(--gold-accent); display: none;">CIPS</div>
+        </div>
+
+        <form id="loginForm" novalidate>
+            <!-- Phone Number Input -->
+            <div class="input-group">
+                <i class="fa-solid fa-mobile-screen input-icon"></i>
+                <div class="country-code">
+                    +977 <span class="dropdown-arrow">&#9660;</span>
+                </div>
+                <input type="text" id="phoneInput" inputmode="numeric" maxlength="10" placeholder="Please enter your phone number" value="">
+            </div>
+
+            <!-- Login Password Input -->
+            <div class="input-group">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="passwordInput" placeholder="Please enter the login password" value="">
+                <i class="fa-regular fa-eye-slash eye-icon" id="togglePassword"></i>
+            </div>
+
+            <!-- Validation & Account Status Message -->
+            <div id="authMessage" class="status-message"></div>
+
+            <!-- Remember Row -->
+            <div class="remember-row">
+                <input type="checkbox" id="remember" checked>
+                <label for="remember">Remember username/password</label>
+            </div>
+
+            <!-- Log In Now Button -->
+            <button type="submit" class="login-btn">Log in now</button>
+
+            <div class="or-text">or</div>
+
+            <!-- Register Now Button -->
+            <a href="register.html" class="register-outline-btn">Register now</a>
+        </form>
+    </main>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='https://i.imgur.com/Y4q0K1u.png'">
+    </div>
+
+    <!-- Draggable Floating Card Image Graphic -->
+    <div class="floating-gold-card" id="draggableGoldCard">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.src='https://i.imgur.com/4m2W66Z.png'">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('passwordInput');
+            const phoneInput = document.getElementById('phoneInput');
+            const rememberCheckbox = document.getElementById('remember');
+            const loginForm = document.getElementById('loginForm');
+            const authMessage = document.getElementById('authMessage');
+
+            // Password Toggle Functionality
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.classList.toggle('fa-eye');
+                togglePassword.classList.toggle('fa-eye-slash');
+            });
+
+            // Allow digits only in phone number (max 10 digits)
+            phoneInput.addEventListener('input', () => {
+                phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+                authMessage.textContent = '';
+            });
+
+            passwordInput.addEventListener('input', () => {
+                authMessage.textContent = '';
+            });
+
+            // Load remembered credentials if saved
+            const savedCreds = JSON.parse(localStorage.getItem('rememberedLogin') || 'null');
+            if (savedCreds && savedCreds.phone) {
+                phoneInput.value = savedCreds.phone;
+                passwordInput.value = savedCreds.password || '';
+                rememberCheckbox.checked = true;
+            }
+
+            function showError(msg) {
+                authMessage.style.color = 'var(--error-color)';
+                authMessage.textContent = msg;
+            }
+
+            function showSuccess(msg) {
+                authMessage.style.color = 'var(--success-color)';
+                authMessage.textContent = msg;
+            }
+
+            // Form Submit: Check Input Validity + Signed-up Status
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const phone = phoneInput.value.trim();
+                const password = passwordInput.value;
+
+                // Step 1: Check if inputs are filled and formatted correctly
+                if (!phone) {
+                    showError('Please enter your phone number.');
+                    phoneInput.focus();
+                    return;
+                }
+
+                if (!/^9\d{9}$/.test(phone)) {
+                    showError('Please enter a valid 10-digit mobile number starting with 9.');
+                    phoneInput.focus();
+                    return;
+                }
+
+                if (!password) {
+                    showError('Please enter your login password.');
+                    passwordInput.focus();
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showError('Password must be at least 6 characters long.');
+                    passwordInput.focus();
+                    return;
+                }
+
+                // Step 2: Check if user has signed up (stored in 'registeredUsers')
+                const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+                const matchedUser = registeredUsers.find((user) => user.phone === phone);
+
+                if (!matchedUser) {
+                    showError('Account not found. Please sign up first.');
+                    return;
+                }
+
+                if (matchedUser.password !== password) {
+                    showError('Incorrect password. Please try again.');
+                    passwordInput.focus();
+                    return;
+                }
+
+                // Step 3: Save or clear remembered credentials
+                if (rememberCheckbox.checked) {
+                    localStorage.setItem('rememberedLogin', JSON.stringify({ phone, password }));
+                } else {
+                    localStorage.removeItem('rememberedLogin');
+                }
+
+                // Save active session
+                localStorage.setItem('currentUser', JSON.stringify({ phone: matchedUser.phone }));
+
+                showSuccess('Login successfully!');
+                alert('Login successfully!');
+            });
+
+            // Make Elements Movable (Draggable with Mouse and Touch)
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+                    initialY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+                    const clientY = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

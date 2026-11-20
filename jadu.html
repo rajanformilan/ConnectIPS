@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass IPS - जादु – कार्ड & Spin Game</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --bg-card-hover: #262134;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding-bottom: 120px;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--bg-main);
+            font-size: 14px;
+            border-bottom: 1px solid #2d2640;
+        }
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gold-accent);
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .header-center .logo-icon {
+            color: var(--purple-accent);
+        }
+        .header-left a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* Main Content Wrapper */
+        .main-content {
+            padding: 16px 12px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            color: var(--gold-accent);
+            margin-bottom: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Balance Card */
+        .balance-box {
+            background: linear-gradient(135deg, #1b1724, #262134);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .balance-info span {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: block;
+        }
+        .balance-info h2 {
+            font-size: 22px;
+            color: var(--gold-accent);
+            margin-top: 4px;
+        }
+        .ticket-badge {
+            background-color: rgba(168, 85, 247, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--purple-accent);
+            font-weight: bold;
+        }
+
+        /* Spin Game Section */
+        .spin-section {
+            background: linear-gradient(135deg, #1b1724, #121019);
+            border: 1px solid #2d2640;
+            border-radius: 12px;
+            padding: 24px 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .spin-wheel-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            border: 5px solid var(--gold-accent);
+            background: radial-gradient(circle, #2d2640, #121019);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(229, 193, 88, 0.2);
+            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
+        }
+        .wheel-center-pointer {
+            position: absolute;
+            top: -12px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 22px solid #ef4444;
+            z-index: 10;
+        }
+        .wheel-text {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--gold-accent);
+        }
+        .spin-btn {
+            background: linear-gradient(135deg, var(--gold-accent), #ca8a04);
+            color: #121019;
+            border: none;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .spin-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Referral Ticket Section */
+        .referral-box {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2640;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .referral-box h3 {
+            font-size: 15px;
+            color: var(--gold-accent);
+            margin-bottom: 6px;
+        }
+        .referral-box p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+        .invite-btn {
+            background: transparent;
+            border: 1px solid var(--purple-accent);
+            color: var(--purple-accent);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .invite-btn:active {
+            background-color: var(--purple-accent);
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #181522;
+            border-top: 1px solid #2d2640;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 999;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            gap: 4px;
+        }
+        .nav-item i {
+            font-size: 18px;
+        }
+        .nav-item.active {
+            color: var(--purple-accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        </div>
+        <div class="header-center">
+            <i class="fa-solid fa-book-open-reader logo-icon"></i>
+            <span class="logo-text">CIPS</span>
+        </div>
+        <div class="header-right">
+            <i class="fa-solid fa-comment-dots"></i>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <h2 class="page-title"><i class="fa-solid fa-id-card"></i> जादु – कार्ड & Spin Win</h2>
+
+        <!-- Balance & Tickets Summary -->
+        <div class="balance-box">
+            <div class="balance-info">
+                <span>Total Wallet Balance</span>
+                <h2 id="walletBalance">NPR 0.00</h2>
+            </div>
+            <div class="ticket-badge">
+                <i class="fa-solid fa-ticket"></i> <span id="ticketCount">3</span> Tickets
+            </div>
+        </div>
+
+        <!-- Spin Wheel Game Section -->
+        <section class="spin-section">
+            <div class="spin-wheel-container" id="spinWheel">
+                <div class="wheel-center-pointer"></div>
+                <div class="wheel-text" id="wheelText">SPIN</div>
+            </div>
+            <button class="spin-btn" id="spinBtn"><i class="fa-solid fa-play"></i> Tap to Spin</button>
+        </section>
+
+        <!-- Referral / Ticket Sharing Box (Like Taka Live) -->
+        <section class="referral-box">
+            <h3>Want More Spin Tickets?</h3>
+            <p>Invite your friends to Compass IPS using your referral link. Earn +2 free spin tickets for every successful friend invitation!</p>
+            <button class="invite-btn" onclick="getMoreTickets()">
+                <i class="fa-solid fa-share-nodes"></i> Invite Friends & Get Tickets
+            </button>
+        </section>
+    </main>
+
+    <!-- App Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Position</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-gem"></i>
+            <span>Invite</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-gift"></i>
+            <span>Profit</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>My</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript for Spin Game & Balance Synchronization -->
+    <script>
+        // Load data from localStorage (shared with index.html)
+        let balance = parseFloat(localStorage.getItem('cips_balance') || '0');
+        let spinTickets = parseInt(localStorage.getItem('cips_spin_tickets') || '3');
+
+        function updateDisplay() {
+            document.getElementById('walletBalance').textContent = `NPR ${balance.toFixed(2)}`;
+            document.getElementById('ticketCount').textContent = spinTickets;
+        }
+
+        // Spin Logic
+        const prizes = [10, 20, 50, 5, 100, 0, 20, 10, 50];
+        let isSpinning = false;
+
+        document.getElementById('spinBtn').addEventListener('click', () => {
+            if (isSpinning) return;
+            if (spinTickets <= 0) {
+                alert('No spin tickets remaining! Invite friends below to earn more tickets.');
+                return;
+            }
+
+            spinTickets--;
+            localStorage.setItem('cips_spin_tickets', spinTickets);
+            updateDisplay();
+
+            isSpinning = true;
+            const wheel = document.getElementById('spinWheel');
+            const randomDegree = Math.floor(Math.random() * 360) + 1800; // 5 full rotations + random offset
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+            setTimeout(() => {
+                const prize = prizes[Math.floor(Math.random() * prizes.length)];
+                if (prize > 0) {
+                    balance += prize;
+                    localStorage.setItem('cips_balance', balance);
+                    updateDisplay();
+                    alert(`🎉 Congratulations! You won NPR ${prize} directly added to your balance!`);
+                } else {
+                    alert('😢 Better luck next time! Try again with another ticket.');
+                }
+                isSpinning = false;
+            }, 4000);
+        });
+
+        function getMoreTickets() {
+            spinTickets += 2;
+            localStorage.setItem('cips_spin_tickets', spinTickets);
+            updateDisplay();
+            alert('🔗 Referral link copied! You received +2 free Spin Tickets.');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDisplay();
+
+            // Bottom navigation active state toggle
+            const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

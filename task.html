@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Math Earn & Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .animate-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .animate-shake { animation: shake 0.4s ease-in-out; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-20 shadow-lg">
+    <div class="max-w-md mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-wallet text-xl"></i>
+        </div>
+        <div class="truncate">
+          <h1 class="font-bold text-lg leading-tight text-white truncate">Daily Math Earn</h1>
+          <p id="plan-status" class="text-xs text-emerald-400 font-semibold truncate">Free Plan: Day 1 of 3</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="openVipModal()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-2.5 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1">
+          <i class="fa-solid fa-crown"></i> VIP
+        </button>
+        <div class="flex items-center gap-1.5 bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-full">
+          <i class="fa-solid fa-coins text-amber-400"></i>
+          <span id="wallet-balance" class="font-bold text-amber-400 text-sm">Rs. 0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-md mx-auto w-full p-4 flex-1 flex flex-col justify-center">
+
+    <!-- Mode Badge & Back Button Indicator -->
+    <div id="mode-badge" class="hidden mb-3 flex items-center justify-between gap-2">
+      <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-3 py-1.5 rounded-full border border-purple-500/30">
+        Fun Practice Mode (No Extra Cash Added)
+      </span>
+      <button onclick="exitFunMode()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+    </div>
+
+    <!-- Progress & Earnings Bar -->
+    <div id="quiz-header" class="mb-6 space-y-2">
+      <div class="flex justify-between items-center text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <span id="question-tracker">Tasks Remaining: 3</span>
+        <span id="earn-tracker">Today's Net: <span id="daily-earned" class="text-emerald-400 font-bold text-sm">Rs. 0 / 30</span></span>
+      </div>
+      <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+        <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-indigo-500 h-full rounded-full transition-all duration-300 w-0"></div>
+      </div>
+    </div>
+
+    <!-- Question Card Container -->
+    <div id="card-container" class="relative">
+
+      <!-- Quiz Card -->
+      <div id="quiz-card" class="bg-slate-800 border border-slate-700 rounded-3xl p-6 shadow-2xl animate-pop relative overflow-hidden">
+
+        <!-- Category Icon & Title -->
+        <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-700/60">
+          <div class="flex items-center gap-2">
+            <span id="cat-icon-bg" class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+              <i id="cat-icon" class="fa-solid fa-cart-shopping"></i>
+            </span>
+            <span id="cat-name" class="text-xs font-bold text-slate-300 uppercase tracking-wide">Groceries</span>
+          </div>
+          <span id="reward-tag" class="text-xs font-medium bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md">+Rs. 10 Net</span>
+        </div>
+
+        <!-- Question Visual Area -->
+        <div class="my-6 text-center">
+          <div id="question-text" class="text-3xl font-extrabold text-white tracking-tight mb-2">
+            Rs. 50 + Rs. 120
+          </div>
+          <p id="question-subtext" class="text-slate-400 text-sm">Solve correctly to proceed</p>
+        </div>
+
+        <!-- Tap Options -->
+        <div id="options-grid" class="grid grid-cols-2 gap-3 mt-6">
+          <!-- Buttons dynamically injected here -->
+        </div>
+      </div>
+
+      <!-- Result Overlay Card -->
+      <div id="completion-card" class="hidden bg-slate-800 border border-slate-700 rounded-3xl p-6 text-center shadow-2xl animate-pop">
+        <div id="completion-icon-box" class="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl border border-emerald-500/30">
+          <i id="completion-icon" class="fa-solid fa-circle-check"></i>
+        </div>
+        <h2 id="completion-title" class="text-2xl font-bold text-white mb-1">Daily Goal Complete!</h2>
+        <p id="completion-desc" class="text-slate-400 text-sm mb-6">Today's earning limit reached. You can keep playing practice questions for fun!</p>
+
+        <div class="bg-slate-900/60 rounded-2xl p-4 mb-6 border border-slate-700/50 grid grid-cols-2 gap-4">
+          <div class="text-center border-r border-slate-800">
+            <p class="text-xs text-slate-400 uppercase font-semibold">Total Wallet</p>
+            <p id="final-wallet" class="text-2xl font-black text-amber-400">Rs. 0</p>
+          </div>
+          <div class="text-center">
+            <p class="text-xs text-slate-400 uppercase font-semibold">Active Plan</p>
+            <p id="final-plan" class="text-lg font-bold text-emerald-400">Free (Day 1/3)</p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+          <button onclick="openVipModal()" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-extrabold rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-crown"></i> Upgrade VIP (Weekly / Monthly)
+          </button>
+
+          <button onclick="startFunMode()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-gamepad"></i> Play Fun Practice Mode
+          </button>
+        </div>
+
+        <p class="text-xs text-slate-500 mt-4">New daily earnings open tomorrow!</p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- VIP Plans Modal (Inside task.html) -->
+  <div id="vip-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h2 class="font-extrabold text-base text-white">VIP Plans (Free 3d &bull; VIP 1–9)</h2>
+          <p id="modal-vip-subtitle" class="text-xs text-amber-400 font-semibold">Balanced Cash Flow Rotation</p>
+        </div>
+        <button onclick="closeVipModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="vip-modal-list" class="p-4 overflow-y-auto space-y-3 flex-1">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="p-4 text-center text-xs text-slate-500 border-t border-slate-800">
+    Daily Math Earn &bull; Balanced Cash Flow Rotation
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 text-white border border-slate-600 px-4 py-2 rounded-full shadow-2xl text-xs font-bold hidden z-50">
+    Notice
+  </div>
+
+  <script>
+    const FREE_MAX_DAYS = 3;
+
+    // Balanced Cash-Flow Model (Free 3 Days Only + VIP 1-9 Weekly/Monthly)
+    const VIP_TIERS = [
+      { level: 0, name: "Free Plan", badge: "3 DAYS ONLY", weeklyCost: 0,     monthlyCost: 0,     taskCost: 0,    taskBonus: 10,   dailyTasks: 3, dailyCap: 30 },
+      { level: 1, name: "VIP 1",     badge: "BRONZE",      weeklyCost: 300,   monthlyCost: 1050,  taskCost: 100,  taskBonus: 110,  dailyTasks: 3, dailyCap: 30 },
+      { level: 2, name: "VIP 2",     badge: "SILVER",      weeklyCost: 600,   monthlyCost: 2100,  taskCost: 200,  taskBonus: 218,  dailyTasks: 3, dailyCap: 54 },
+      { level: 3, name: "VIP 3",     badge: "GOLD",        weeklyCost: 1200,  monthlyCost: 4200,  taskCost: 400,  taskBonus: 432,  dailyTasks: 3, dailyCap: 96 },
+      { level: 4, name: "VIP 4",     badge: "PLATINUM",    weeklyCost: 2000,  monthlyCost: 7000,  taskCost: 650,  taskBonus: 698,  dailyTasks: 3, dailyCap: 144 },
+      { level: 5, name: "VIP 5",     badge: "DIAMOND",     weeklyCost: 3500,  monthlyCost: 12200, taskCost: 1000, taskBonus: 1070, dailyTasks: 3, dailyCap: 210 },
+      { level: 6, name: "VIP 6",     badge: "ROYAL",       weeklyCost: 6000,  monthlyCost: 21000, taskCost: 1500, taskBonus: 1600, dailyTasks: 4, dailyCap: 400 },
+      { level: 7, name: "VIP 7",     badge: "ELITE",       weeklyCost: 10000, monthlyCost: 35000, taskCost: 2500, taskBonus: 2650, dailyTasks: 4, dailyCap: 600 },
+      { level: 8, name: "VIP 8",     badge: "MASTER",      weeklyCost: 16000, monthlyCost: 56000, taskCost: 4000, taskBonus: 4220, dailyTasks: 4, dailyCap: 880 },
+      { level: 9, name: "VIP 9",     badge: "LEGEND",      weeklyCost: 25000, monthlyCost: 87500, taskCost: 6000, taskBonus: 6300, dailyTasks: 5, dailyCap: 1500 }
+    ];
+
+    // --- Audio Synthesizer (Web Audio API) ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+    }
+
+    function playSound(type) {
+      try {
+        initAudio();
+        if (!audioCtx) return;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.2);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'win') {
+          const freqs = [440, 554.37, 659.25, 880];
+          freqs.forEach((f, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.frequency.setValueAtTime(f, now + i * 0.1);
+            g.gain.setValueAtTime(0.2, now + i * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+            o.start(now + i * 0.1);
+            o.stop(now + i * 0.1 + 0.3);
+          });
+        }
+      } catch (e) {
+        console.log('Audio playback prevented or unsupported.');
+      }
+    }
+
+    // --- Deterministic Seed Generator ---
+    function mulberry32(a) {
+      return function() {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 8, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      }
+    }
+
+    function getTodaySeed() {
+      const today = new Date().toISOString().split('T')[0];
+      let hash = 0;
+      for (let i = 0; i < today.length; i++) {
+        hash = (hash << 5) - hash + today.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function addDaysToToday(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split('T')[0];
+    }
+
+    // --- App State ---
+    let taskQueue = [];
+    let initialTotalTasks = 3;
+    let walletBalance = 0;
+    let vipLevel = 0;
+    let vipCycle = "free_3d";
+    let vipExpiry = null;
+    let freePlanDay = 1;
+    let isFreeExpired = false;
+    let isFunMode = false;
+    let activeTier = VIP_TIERS[0];
+
+    const categories = [
+      { name: 'Groceries', icon: 'fa-cart-shopping' },
+      { name: 'Mobile Recharge', icon: 'fa-mobile-screen-button' },
+      { name: 'Bus Transit', icon: 'fa-bus' },
+      { name: 'Household Spend', icon: 'fa-house' },
+      { name: 'Daily Treats', icon: 'fa-mug-hot' }
+    ];
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full shadow-2xl text-xs font-bold z-50 border ${
+        isError
+          ? 'bg-rose-950 text-rose-200 border-rose-500/50'
+          : 'bg-emerald-950 text-emerald-200 border-emerald-500/50'
+      }`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2400);
+    }
+
+    function generateTasksForCount(count, isRandom = false) {
+      const rng = isRandom ? Math.random : mulberry32(getTodaySeed());
+      const generated = [];
+
+      for (let i = 0; i < count; i++) {
+        const cat = categories[i % categories.length];
+        const mode = i % 5;
+
+        if (mode === 0) {
+          const a = Math.floor(rng() * 18 + 2) * 10;
+          const b = Math.floor(rng() * 18 + 2) * 10;
+          const ans = a + b;
+          generated.push({ cat, text: `Rs. ${a} + Rs. ${b}`, sub: 'Calculate total spend', ans: `Rs. ${ans}`, opts: shuffleArray([`Rs. ${ans}`, `Rs. ${ans + 10}`], rng) });
+        } else if (mode === 1) {
+          const item = Math.floor(rng() * 35 + 10) * 10;
+          const paid = Math.ceil(item / 100) * 100 + 100;
+          const ans = paid - item;
+          generated.push({ cat, text: `Paid Rs. ${paid} for Rs. ${item} item`, sub: 'What is your change back?', ans: `Rs. ${ans}`, opts: shuffleArray([`Rs. ${ans}`, `Rs. ${ans + 20}`], rng) });
+        } else if (mode === 2) {
+          const qty = Math.floor(rng() * 4 + 2);
+          const price = Math.floor(rng() * 8 + 2) * 10;
+          const ans = qty * price;
+          generated.push({ cat, text: `${qty} tickets × Rs. ${price} each`, sub: 'Total fare cost', ans: `Rs. ${ans}`, opts: shuffleArray([`Rs. ${ans}`, `Rs. ${ans + 10}`], rng) });
+        } else if (mode === 3) {
+          const base = Math.floor(rng() * 40 + 10) * 10;
+          const diff = 20;
+          const ans = base + diff;
+          generated.push({ cat, text: `Rs. ${ans} vs Rs. ${base}`, sub: 'Which purchase cost MORE?', ans: `Rs. ${ans}`, opts: shuffleArray([`Rs. ${ans}`, `Rs. ${base}`], rng) });
+        } else {
+          const val = Math.floor(rng() * 14 + 3) * 5;
+          const ans = val * 2;
+          generated.push({ cat, text: `Double Rs. ${val}`, sub: 'Quick multiplier', ans: `Rs. ${ans}`, opts: shuffleArray([`Rs. ${ans}`, `Rs. ${ans + 10}`], rng) });
+        }
+      }
+
+      return generated;
+    }
+
+    function shuffleArray(arr, rng) {
+      const cloned = [...arr];
+      for (let i = cloned.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+      }
+      return cloned;
+    }
+
+    function loadUserData() {
+      walletBalance = parseInt(localStorage.getItem('math_wallet_balance') || '0', 10);
+      vipLevel = parseInt(localStorage.getItem('math_vip_level') || '0', 10);
+      vipCycle = localStorage.getItem('math_vip_cycle') || (vipLevel === 0 ? 'free_3d' : 'weekly');
+      vipExpiry = localStorage.getItem('math_vip_expiry') || null;
+
+      activeTier = VIP_TIERS.find(t => t.level === vipLevel) || VIP_TIERS[0];
+      const today = new Date().toISOString().split('T')[0];
+
+      if (vipLevel === 0) {
+        let freeStart = localStorage.getItem('math_free_start_date');
+        let freeExp = localStorage.getItem('math_free_expiry');
+        if (!freeStart || !freeExp) {
+          freeStart = today;
+          freeExp = addDaysToToday(FREE_MAX_DAYS);
+          localStorage.setItem('math_free_start_date', freeStart);
+          localStorage.setItem('math_free_expiry', freeExp);
+        }
+        const startMs = new Date(freeStart + 'T00:00:00').getTime();
+        const todayMs = new Date(today + 'T00:00:00').getTime();
+        const diffDays = Math.floor((todayMs - startMs) / (1000 * 60 * 60 * 24)) + 1;
+
+        if (today > freeExp || diffDays > FREE_MAX_DAYS) {
+          freePlanDay = FREE_MAX_DAYS;
+          isFreeExpired = true;
+        } else {
+          freePlanDay = Math.max(1, diffDays);
+          isFreeExpired = false;
+        }
+        localStorage.setItem('math_free_plan_day', freePlanDay.toString());
+        document.getElementById('plan-status').textContent =
+          isFreeExpired ? 'Free Plan: 3-Day Limit Expired' : `Free Plan: Day ${freePlanDay} of ${FREE_MAX_DAYS}`;
+      } else {
+        isFreeExpired = false;
+        if (vipExpiry && today > vipExpiry) {
+          vipLevel = 0;
+          vipCycle = 'free_3d';
+          localStorage.setItem('math_vip_level', '0');
+          localStorage.setItem('math_vip_cycle', 'free_3d');
+          showToast('VIP plan expired. Switched to Free Plan.', true);
+          loadUserData();
+          return;
+        }
+        const cycleLabel = vipCycle === 'monthly' ? 'Monthly' : 'Weekly';
+        document.getElementById('plan-status').textContent = `${activeTier.name} (${cycleLabel})`;
+      }
+
+      initialTotalTasks = activeTier.dailyTasks;
+      document.getElementById('wallet-balance').textContent = `Rs. ${walletBalance.toLocaleString()}`;
+    }
+
+    function getPerTaskNet() {
+      if (vipLevel === 0) return activeTier.taskBonus;
+      return Math.max(0, activeTier.taskBonus - activeTier.taskCost);
+    }
+
+    // --- Core Logic ---
+    function initApp() {
+      loadUserData();
+      isFunMode = false;
+      document.getElementById('mode-badge').classList.add('hidden');
+      document.getElementById('earn-tracker').innerHTML =
+        `Today's Net: <span id="daily-earned" class="text-emerald-400 font-bold text-sm">Rs. 0 / ${activeTier.dailyCap.toLocaleString()}</span>`;
+
+      if (vipLevel === 0 && isFreeExpired) {
+        showFreeExpiredScreen();
+        return;
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      const lastCompletedDate = localStorage.getItem('math_last_completed_date');
+      const lastCompletedVip = localStorage.getItem('math_last_completed_vip');
+
+      if (lastCompletedDate === today && lastCompletedVip === String(vipLevel)) {
+        showCompletion();
+      } else {
+        document.getElementById('completion-card').classList.add('hidden');
+        document.getElementById('quiz-header').classList.remove('hidden');
+        document.getElementById('quiz-card').classList.remove('hidden');
+        taskQueue = generateTasksForCount(initialTotalTasks, false);
+        renderTask();
+      }
+    }
+
+    function renderTask() {
+      if (taskQueue.length === 0) {
+        if (isFunMode) {
+          taskQueue = generateTasksForCount(5, true);
+        } else {
+          completeDailyGoal();
+          return;
+        }
+      }
+
+      const perTaskNet = getPerTaskNet();
+      const dailyCap = activeTier.dailyCap;
+
+      if (isFunMode) {
+        document.getElementById('mode-badge').classList.remove('hidden');
+        document.getElementById('reward-tag').className = "text-xs font-medium bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md";
+        document.getElementById('reward-tag').textContent = "Fun Practice";
+        document.getElementById('earn-tracker').innerHTML = 'Earn: <span class="text-purple-400 font-bold text-sm">Practice Mode</span>';
+        document.getElementById('question-tracker').textContent = `Fun Task Queue: ${taskQueue.length}`;
+        document.getElementById('progress-bar').style.width = '100%';
+      } else {
+        document.getElementById('mode-badge').classList.add('hidden');
+        const completedCount = initialTotalTasks - taskQueue.length;
+        const earnedSoFar = Math.min(dailyCap, completedCount * perTaskNet);
+
+        document.getElementById('question-tracker').textContent = `Tasks Remaining: ${taskQueue.length}`;
+        document.getElementById('daily-earned').textContent = `Rs. ${earnedSoFar.toLocaleString()} / ${dailyCap.toLocaleString()}`;
+        document.getElementById('progress-bar').style.width = `${(completedCount / initialTotalTasks) * 100}%`;
+
+        document.getElementById('reward-tag').className = "text-xs font-medium bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md";
+        document.getElementById('reward-tag').textContent =
+          activeTier.taskCost > 0
+            ? `Cost Rs. ${activeTier.taskCost.toLocaleString()} • +Rs. ${perTaskNet} Net`
+            : `+Rs. ${perTaskNet} Net`;
+      }
+
+      const task = taskQueue[0];
+
+      document.getElementById('cat-name').textContent = task.cat.name;
+      document.getElementById('cat-icon').className = `fa-solid ${task.cat.icon}`;
+      document.getElementById('question-text').textContent = task.text;
+      document.getElementById('question-subtext').textContent = task.sub;
+
+      const grid = document.getElementById('options-grid');
+      grid.innerHTML = '';
+
+      task.opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = `w-full py-5 px-4 bg-slate-700/60 hover:bg-indigo-600/80 active:bg-indigo-700
+                         border border-slate-600/80 hover:border-indigo-400 rounded-2xl text-2xl font-black
+                         text-white shadow-md transition duration-150 transform active:scale-95 flex items-center justify-center`;
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(opt, task.ans, btn);
+        grid.appendChild(btn);
+      });
+
+      const card = document.getElementById('quiz-card');
+      card.classList.remove('animate-pop', 'animate-shake');
+      void card.offsetWidth;
+      card.classList.add('animate-pop');
+    }
+
+    function handleAnswer(selected, correct, btn) {
+      initAudio();
+      const card = document.getElementById('quiz-card');
+      const currentTask = taskQueue.shift();
+
+      if (selected === correct) {
+        playSound('correct');
+        btn.classList.remove('bg-slate-700/60', 'border-slate-600/80');
+        btn.classList.add('bg-emerald-600', 'border-emerald-400');
+
+        setTimeout(() => {
+          renderTask();
+        }, 400);
+      } else {
+        playSound('wrong');
+        taskQueue.push(currentTask);
+
+        btn.classList.remove('bg-slate-700/60');
+        btn.classList.add('bg-rose-600', 'border-rose-400');
+
+        card.classList.remove('animate-shake');
+        void card.offsetWidth;
+        card.classList.add('animate-shake');
+
+        setTimeout(() => {
+          renderTask();
+        }, 500);
+      }
+    }
+
+    function completeDailyGoal() {
+      playSound('win');
+
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem('math_last_completed_date', today);
+      localStorage.setItem('math_last_completed_vip', String(vipLevel));
+
+      const netReward = activeTier.dailyCap;
+      walletBalance += netReward;
+      localStorage.setItem('math_wallet_balance', walletBalance.toString());
+
+      showCompletion(netReward);
+    }
+
+    function showCompletion(justEarned = null) {
+      const cap = activeTier.dailyCap;
+      const earnedText = justEarned !== null ? `+Rs. ${justEarned.toLocaleString()} added! ` : '';
+
+      document.getElementById('progress-bar').style.width = '100%';
+      document.getElementById('quiz-header').classList.add('hidden');
+      document.getElementById('quiz-card').classList.add('hidden');
+      document.getElementById('mode-badge').classList.add('hidden');
+
+      document.getElementById('completion-icon-box').className =
+        "w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl border border-emerald-500/30";
+      document.getElementById('completion-icon').className = "fa-solid fa-circle-check";
+      document.getElementById('completion-title').textContent = `+Rs. ${cap.toLocaleString()} Daily Net Complete!`;
+      document.getElementById('completion-desc').textContent =
+        `${earnedText}Today's earning limit reached. Play practice mode or upgrade VIP for higher limits.`;
+
+      document.getElementById('final-wallet').textContent = `Rs. ${walletBalance.toLocaleString()}`;
+      document.getElementById('final-plan').textContent =
+        vipLevel === 0 ? `Free (Day ${freePlanDay}/${FREE_MAX_DAYS})` : `${activeTier.name}`;
+      document.getElementById('wallet-balance').textContent = `Rs. ${walletBalance.toLocaleString()}`;
+
+      document.getElementById('completion-card').classList.remove('hidden');
+    }
+
+    function showFreeExpiredScreen() {
+      document.getElementById('quiz-header').classList.add('hidden');
+      document.getElementById('quiz-card').classList.add('hidden');
+      document.getElementById('mode-badge').classList.add('hidden');
+
+      document.getElementById('completion-icon-box').className =
+        "w-20 h-20 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl border border-rose-500/30";
+      document.getElementById('completion-icon').className = "fa-solid fa-hourglass-end";
+      document.getElementById('completion-title').textContent = "Free Plan (3 Days) Ended";
+      document.getElementById('completion-desc').textContent =
+        "Your 3-day Free Plan is over. Upgrade to Weekly or Monthly VIP (1–9) to keep earning, or play Fun Practice Mode.";
+
+      document.getElementById('final-wallet').textContent = `Rs. ${walletBalance.toLocaleString()}`;
+      document.getElementById('final-plan').textContent = "Free Expired";
+
+      document.getElementById('completion-card').classList.remove('hidden');
+    }
+
+    function startFunMode() {
+      isFunMode = true;
+      taskQueue = generateTasksForCount(5, true);
+
+      document.getElementById('completion-card').classList.add('hidden');
+      document.getElementById('quiz-header').classList.remove('hidden');
+      document.getElementById('quiz-card').classList.remove('hidden');
+
+      renderTask();
+    }
+
+    function exitFunMode() {
+      isFunMode = false;
+      initApp();
+    }
+
+    // --- VIP Modal inside task.html ---
+    function openVipModal() {
+      renderVipModalList();
+      document.getElementById('vip-modal').classList.remove('hidden');
+    }
+
+    function closeVipModal() {
+      document.getElementById('vip-modal').classList.add('hidden');
+    }
+
+    function upgradeVipPlan(level, cycle) {
+      const tier = VIP_TIERS.find(t => t.level === level);
+      if (!tier) return;
+
+      if (level === 0) {
+        vipLevel = 0;
+        vipCycle = 'free_3d';
+        vipExpiry = localStorage.getItem('math_free_expiry') || addDaysToToday(FREE_MAX_DAYS);
+        localStorage.setItem('math_vip_level', '0');
+        localStorage.setItem('math_vip_cycle', 'free_3d');
+        closeVipModal();
+        initApp();
+        return;
+      }
+
+      const chosenCycle = cycle === 'monthly' ? 'monthly' : 'weekly';
+      const cost = chosenCycle === 'monthly' ? tier.monthlyCost : tier.weeklyCost;
+      const days = chosenCycle === 'monthly' ? 30 : 7;
+
+      if (walletBalance < cost) {
+        showToast(`Need Rs. ${cost.toLocaleString()} in wallet for ${tier.name} (${chosenCycle}).`, true);
+        return;
+      }
+
+      walletBalance -= cost;
+      vipLevel = tier.level;
+      vipCycle = chosenCycle;
+      vipExpiry = addDaysToToday(days);
+
+      localStorage.setItem('math_wallet_balance', walletBalance.toString());
+      localStorage.setItem('math_vip_level', vipLevel.toString());
+      localStorage.setItem('math_vip_cycle', vipCycle);
+      localStorage.setItem('math_vip_expiry', vipExpiry);
+
+      showToast(`${tier.name} (${chosenCycle.toUpperCase()}) activated!`);
+      closeVipModal();
+      initApp();
+    }
+
+    function renderVipModalList() {
+      const list = document.getElementById('vip-modal-list');
+      list.innerHTML = '';
+
+      VIP_TIERS.forEach(tier => {
+        const isFree = tier.level === 0;
+        const perTaskNet = isFree ? tier.taskBonus : (tier.taskBonus - tier.taskCost);
+        const isCurrent = isFree ? (vipLevel === 0) : (tier.level === vipLevel);
+
+        const row = document.createElement('div');
+        row.className = `bg-slate-800 border rounded-2xl p-3.5 ${isCurrent ? 'border-amber-400' : 'border-slate-700'}`;
+
+        if (isFree) {
+          row.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <span class="text-sm font-black text-white">${tier.name}</span>
+                <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">3 DAYS ONLY</span>
+              </div>
+              <span class="text-xs font-bold text-emerald-400">+Rs. ${tier.dailyCap}/day</span>
+            </div>
+            <div class="text-xs text-slate-400 mb-2.5">
+              ${tier.dailyTasks} tasks/day &bull; +Rs. ${perTaskNet}/task net
+            </div>
+            <button onclick="upgradeVipPlan(0, 'free_3d')" class="w-full py-2 rounded-xl text-xs font-bold bg-slate-700 hover:bg-slate-600 text-white">
+              ${isFreeExpired ? 'Free 3-Day Limit Expired' : (isCurrent ? `Active Free (Day ${freePlanDay}/${FREE_MAX_DAYS})` : 'Select Free (3 Days)')}
+            </button>
+          `;
+        } else {
+          const isWeekly = tier.level === vipLevel && vipCycle === 'weekly';
+          const isMonthly = tier.level === vipLevel && vipCycle === 'monthly';
+
+          row.innerHTML = `
+            <div class="flex items-center justify-between mb-1.5">
+              <div>
+                <span class="text-sm font-black text-white">${tier.name}</span>
+                <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">${tier.badge}</span>
+              </div>
+              <span class="text-xs font-bold text-indigo-300">+Rs. ${tier.dailyCap.toLocaleString()}/day</span>
+            </div>
+            <div class="text-xs text-slate-400 mb-3">
+              Cost: <strong class="text-rose-400">Rs. ${tier.taskCost.toLocaleString()}</strong> &rarr;
+              Payout: <strong class="text-emerald-400">Rs. ${tier.taskBonus.toLocaleString()}</strong>
+              (+Rs. ${perTaskNet}/task net, ${tier.dailyTasks} tasks/day)
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="upgradeVipPlan(${tier.level}, 'weekly')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition ${
+                isWeekly ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/40' : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+              }">
+                ${isWeekly ? 'Weekly Active' : `Weekly • Rs. ${tier.weeklyCost.toLocaleString()}`}
+              </button>
+              <button onclick="upgradeVipPlan(${tier.level}, 'monthly')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition ${
+                isMonthly ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+              }">
+                ${isMonthly ? 'Monthly Active' : `Monthly • Rs. ${tier.monthlyCost.toLocaleString()}`}
+              </button>
+            </div>
+          `;
+        }
+
+        list.appendChild(row);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

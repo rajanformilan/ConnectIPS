@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile - CIPS</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: #d1c7bd;
+            padding-bottom: 60px;
+        }
+
+        /* Image Slider Styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 230px;
+            overflow: hidden;
+            background-color: #0b090e;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Profile Header Banner */
+        .profile-title-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: -22px auto 20px auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .profile-title {
+            background-color: #242232;
+            color: #e6c567;
+            padding: 8px 30px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            border: 1px solid #3a3650;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Content Text Styles */
+        .content-container {
+            padding: 0 20px;
+            line-height: 1.7;
+            font-size: 14px;
+            color: #c9bdae;
+            text-align: justify;
+        }
+
+        .content-container p {
+            margin-bottom: 20px;
+        }
+
+        /* Draggable Floating Customer Service Icon */
+        .floating-support {
+            position: fixed;
+            right: 16px;
+            bottom: 100px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .floating-support:active {
+            cursor: grabbing;
+        }
+
+        .floating-support .help {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Draggable Floating Golden Card Graphic */
+        .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            bottom: 165px;
+            width: 45px;
+            height: 55px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .floating-gold-card:active {
+            cursor: grabbing;
+        }
+
+        .gold-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Image Slider Section -->
+    <div class="slider-container">
+        <div class="slide active"><img src="slide1.jpg" alt="Slide 1"></div>
+        <div class="slide"><img src="slide2.jpg" alt="Slide 2"></div>
+        <div class="slide"><img src="slide3.jpg" alt="Slide 3"></div>
+        <div class="slide"><img src="slide4.jpg" alt="Slide 4"></div>
+    </div>
+
+    <!-- Company Profile Title Box -->
+    <div class="profile-title-box">
+        <div class="profile-title">Company Profile</div>
+    </div>
+
+    <!-- Scrollable Text Content -->
+    <div class="content-container">
+        <p>Established in the UK in 1998, Connection Independent Publishing Services (hereinafter referred to as CIPS) is a world-leading global ecosystem for professional publishing services. Moving beyond the framework of traditional book publishing, CIPS operates as a premier international agency providing comprehensive market access, sales representation, and strategic marketing services tailored specifically for independent publishers, mid-sized presses, and academic institutions.</p>
+        <p>Over more than two decades of profound growth, CIPS has cultivated significant global influence across critical verticals, including general literature, fiction, economics, children's books, cookbooks, and religious literature. As early as 1999, the group achieved a historic milestone with 43 of its represented titles simultaneously breaking onto the New York Times bestseller list. According to its fiscal year 2024 report (ending June 30, 2023), CIPS’ global sales reached $2.09 billion, with an EBITDA of $269 million. Currently, its UK branch alone facilitates the distribution and sales representation of approximately 1,500 titles annually.</p>
+        <p>Guided by its core values of "Innovation, Collaboration, and Win-Win," CIPS is dedicated to driving the vigorous development and digital transformation of the cultural and media industries. By seamlessly merging cutting-edge distribution technologies and data-driven marketing with decades of trade expertise, CIPS breaks down geographical barriers to deliver unique, high-value digital and physical reading experiences to audiences worldwide.</p>
+        <p>As part of its ongoing international expansion, CIPS is strategically establishing its presence in the vibrant Nepalese market. Capitalizing on the country’s massive youth demographic dividend and rapidly accelerating digital content consumption, CIPS aims to fully empower the domestic publishing ecosystem, local authors, and distribution networks. Through injecting premium global literary resources and building dual-way cultural pipelines, CIPS is committed to elevating Nepal’s unique indigenous heritage and literary stories onto the global spotlight.</p>
+    </div>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='customer.png'">
+    </div>
+
+    <!-- Draggable Floating Golden Card Graphic -->
+    <div class="floating-gold-card" id="draggableGoldCard">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.src='https://i.imgur.com/4m2W66Z.png'">
+    </div>
+
+    <!-- Script for Slider and Dragging -->
+    <script>
+        // Image Slider Logic
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Change image every 3 seconds
+        setInterval(nextSlide, 3000);
+
+        // Draggable Elements Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

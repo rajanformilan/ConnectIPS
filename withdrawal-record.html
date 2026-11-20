@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Withdrawal Record - Compass IPS</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121019;
+            --bg-card: #1b1724;
+            --gold-accent: #e5c158;
+            --purple-accent: #a855f7;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2d2640;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 120px;
+        }
+
+        /* Top Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background-color: var(--bg-main);
+            position: relative;
+        }
+
+        .back-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--gold-accent);
+        }
+
+        /* Wallet Box Container */
+        .wallet-container {
+            padding: 10px 16px;
+        }
+
+        .wallet-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .wallet-balance-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--gold-accent);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .wallet-balance-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .wallet-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .wallet-actions {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .action-btn {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .action-btn.active {
+            color: var(--gold-accent);
+        }
+
+        /* Records Tabs Header */
+        .records-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 16px 10px 16px;
+        }
+
+        .record-tab {
+            font-size: 15px;
+            color: var(--text-muted);
+            text-decoration: none;
+            cursor: pointer;
+            padding-bottom: 6px;
+        }
+
+        .record-tab.active {
+            color: var(--text-main);
+            font-weight: 600;
+            border-bottom: 2px solid var(--gold-accent);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty-icon-group {
+            position: relative;
+            width: 80px;
+            height: 70px;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        .clipboard-icon {
+            position: absolute;
+            background-color: #2e283d;
+            border: 2px solid #4a4063;
+            border-radius: 6px;
+            width: 50px;
+            height: 60px;
+        }
+
+        .clipboard-back {
+            top: 5px;
+            left: 15px;
+            transform: rotate(10deg);
+            z-index: 1;
+        }
+
+        .clipboard-front {
+            top: 0;
+            left: 10px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 8px;
+        }
+
+        .clipboard-clip {
+            width: 16px;
+            height: 6px;
+            background-color: #5c4f7a;
+            border-radius: 3px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Bottom Nav Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--gold-accent);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        /* Draggable Floating Customer Service Icon */
+        .floating-support {
+            position: fixed;
+            right: 16px;
+            bottom: 140px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .floating-support:active {
+            cursor: grabbing;
+        }
+
+        .floating-support .help {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Draggable Floating Card Image Graphic */
+        .floating-gold-card {
+            position: fixed;
+            right: 16px;
+            bottom: 205px;
+            width: 45px;
+            height: 55px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .floating-gold-card:active {
+            cursor: grabbing;
+        }
+
+        .gold-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header Bar -->
+    <header class="top-header">
+        <a href="index.html" class="back-arrow"><i class="fa-solid fa-chevron-left"></i></a>
+        <div class="header-title">My wallet</div>
+    </header>
+
+    <!-- Wallet Card Component -->
+    <div class="wallet-container">
+        <div class="wallet-card">
+            <div class="wallet-balance-value">0.00</div>
+            <div class="wallet-balance-label">Balance</div>
+            <div class="wallet-divider"></div>
+            <div class="wallet-actions">
+                <a href="recharge.html" class="action-btn">Recharge</a>
+                <a href="withdrawal.html" class="action-btn active">Withdrawal</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Records Navigation Tabs -->
+    <div class="records-nav">
+        <a href="recharge-record.html" class="record-tab">Recharge record</a>
+        <a href="withdrawal-record.html" class="record-tab active">Withdrawal record</a>
+    </div>
+
+    <!-- Empty State Content -->
+    <div class="empty-state">
+        <div class="empty-icon-group">
+            <div class="clipboard-icon clipboard-back"></div>
+            <div class="clipboard-icon clipboard-front">
+                <div class="clipboard-clip"></div>
+            </div>
+        </div>
+        <div class="empty-text">No data</div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="position.html" class="nav-item">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span>Position</span>
+        </a>
+        <a href="invite.html" class="nav-item">
+            <i class="fa-solid fa-gem"></i>
+            <span>Invite</span>
+        </a>
+        <a href="profit.html" class="nav-item">
+            <i class="fa-solid fa-gift"></i>
+            <span>Profit</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fa-solid fa-user"></i>
+            <span>My</span>
+        </a>
+    </nav>
+
+    <!-- Draggable Floating Customer Service Icon -->
+    <div class="floating-support" id="draggableSupport">
+        <img src="customer.png" alt="support" class="help" onerror="this.src='customer.png'">
+    </div>
+
+    <!-- Draggable Floating Card Image Graphic -->
+    <div class="floating-gold-card" id="draggableGoldCard">
+        <img src="jadu.jpg" alt="gold-card" class="gold-card-img" onerror="this.src='https://i.imgur.com/4m2W66Z.png'">
+    </div>
+
+    <script>
+        // Draggable Elements Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            function makeDraggable(elm) {
+                let initialX = 0, initialY = 0;
+                elm.addEventListener('mousedown', dragStart);
+                elm.addEventListener('touchstart', dragStart, { passive: false });
+
+                function dragStart(e) {
+                    e.preventDefault();
+                    initialX = e.clientX || e.touches[0].clientX;
+                    initialY = e.clientY || e.touches[0].clientY;
+
+                    document.addEventListener('mousemove', drag);
+                    document.addEventListener('touchmove', drag, { passive: false });
+                    document.addEventListener('mouseup', dragEnd);
+                    document.addEventListener('touchend', dragEnd);
+                }
+
+                function drag(e) {
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
+                    const dx = clientX - initialX;
+                    const dy = clientY - initialY;
+
+                    initialX = clientX;
+                    initialY = clientY;
+
+                    const rect = elm.getBoundingClientRect();
+                    elm.style.right = 'auto';
+                    elm.style.bottom = 'auto';
+                    elm.style.left = (rect.left + dx) + 'px';
+                    elm.style.top = (rect.top + dy) + 'px';
+                }
+
+                function dragEnd() {
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('mouseup', dragEnd);
+                    document.removeEventListener('touchend', dragEnd);
+                }
+            }
+
+            makeDraggable(document.getElementById('draggableSupport'));
+            makeDraggable(document.getElementById('draggableGoldCard'));
+        });
+    </script>
+</body>
+</html>

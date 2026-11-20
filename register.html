@@ -257,7 +257,7 @@
 <body>
     <!-- Top Header Bar -->
     <header class="top-header">
-        <div class="back-arrow">&lt;</div>
+        <div class="back-arrow" onclick="window.location.href='login.html'">&lt;</div>
         <div class="header-title">ConnectionIPS</div>
         <div class="header-language">Language</div>
     </header>
@@ -352,7 +352,6 @@
                 const confirmPassword = document.getElementById('confirmPassInput').value;
                 const enteredCaptcha = document.getElementById('captchaInput').value.trim();
 
-                // Validation checks
                 if (password !== confirmPassword) {
                     showAlert("Passwords do not match!", "error");
                     return;
@@ -364,20 +363,20 @@
                     return;
                 }
 
-                // Save data to localStorage to use for login simulation
-                const userData = { phone, password };
+                // Save user data & login state in localStorage for home.html / login
+                const userData = {
+                    phone,
+                    password,
+                    isLoggedIn: true
+                };
                 localStorage.setItem('connectionIPS_user', JSON.stringify(userData));
 
+                // Show success message only and redirect to home.html
                 showAlert("Registration successful! Redirecting...", "success");
 
-                // Simulate redirect / UI change after successful registration
                 setTimeout(() => {
-                    document.querySelector('.main-container').innerHTML = `
-                        <h1 class="register-header">Welcome!</h1>
-                        <p style="color: var(--text-grey); margin-bottom: 20px;">Your account has been successfully created with phone: <b>+977 ${phone}</b></p>
-                        <button class="register-btn" onclick="location.reload()">Logout / Register Another</button>
-                    `;
-                }, 1500);
+                    window.location.href = 'home.html';
+                }, 1200);
             });
 
             function showAlert(message, type) {
